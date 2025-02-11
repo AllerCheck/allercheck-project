@@ -7,7 +7,6 @@ function App() {
     <div className="flex flex-col min-h-screen">
       <Header />
       
-      {/* Main content should grow to fill space, without scrolling */}
       <main className="flex-grow overflow-y-auto pb-4">
         <Home />
       </main>
