@@ -23,6 +23,10 @@ function Home() {
           Appointments
         </button>
       </div>
+
+      <div className="flex justify-center mt-28 text-4xl">
+        <h2>Commercial Ads for future use</h2>
+      </div>
     </div>
   );
 }
