@@ -4,7 +4,7 @@ import Home from "./pages/Home";
 
 function App() {
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-yellow-50">
       <Header />
       
       <main className="flex-grow overflow-y-auto pb-4">

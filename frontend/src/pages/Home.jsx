@@ -7,7 +7,7 @@ function Home() {
 
       {/* Flexbox layout for Articles and Wetter */}
       <div className="flex justify-center gap-x-6 p-4 min-h-96 ml-2 mr-2">
-        <div className="bg-blue-100 p-6 text-xl font-bold rounded-2xl w-3/4 md:w-2/3">
+        <div className="bg-teal-50 p-6 text-xl font-bold rounded-2xl w-3/4 md:w-2/3">
           Articles
         </div>
         <div className="bg-green-100 p-6 text-xl font-bold rounded-2xl w-1/2 md:w-1/3">
