@@ -1,6 +1,5 @@
 import express from 'express';
 import bcrypt from 'bcrypt';
-
 import jwt from 'jsonwebtoken';
 import mariadb from 'mariadb';
 import dotenv from 'dotenv';
@@ -23,8 +22,8 @@ const generateToken = (user) => {
 
 // Registrierung
 router.post('/register', async (req, res) => {
-    const { firstName, lastName, email, emailConfirm, password, passwordConfirm, acceptPolicy, dob, medications, allergies } = req.body;
-    if (!firstName || !lastName || !email || !emailConfirm || !password || !passwordConfirm || !acceptPolicy) {
+    const { firstName, lastName, email, emailConfirm, password, passwordConfirm, dob, medications, allergies, acceptPolicy } = req.body;
+    if (!firstName || !lastName || !email || !emailConfirm || !password || !passwordConfirm || acceptPolicy === undefined) {
         return res.status(400).json({ message: 'Alle Pflichtfelder sind erforderlich!' });
     }
     if (email !== emailConfirm) {
@@ -38,8 +37,8 @@ router.post('/register', async (req, res) => {
     try {
         const conn = await pool.getConnection();
         await conn.query(
-            'INSERT INTO users (firstName, lastName, email, password, dob, medications, allergies, acceptPolicy) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', 
-            [firstName, lastName, email, hashedPassword, dob, medications, allergies, acceptPolicy]
+            'INSERT INTO users (firstName, lastName, email, password, dob, medications, allergies, acceptPolicy) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+            [firstName, lastName, email, hashedPassword, dob || null, medications || null, allergies || null, acceptPolicy]
         );
         conn.release();
         res.status(201).json({ message: 'Registrierung erfolgreich' });
