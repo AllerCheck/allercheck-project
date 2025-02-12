@@ -10,10 +10,12 @@ const router = express.Router();
 
 const pool = mariadb.createPool({
     host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
     user: process.env.DB_USER,
     password: process.env.DB_PASS,
     database: process.env.DB_NAME,
-    connectionLimit: 10
+    connectionLimit: 10,
+    acquireTimeout: 30000
 });
 
 const generateToken = (user) => {
@@ -24,12 +26,9 @@ const generateToken = (user) => {
 router.post('/register', async (req, res) => {
     const { firstName, lastName, email, emailConfirm, password, passwordConfirm, acceptPolicy, dob, medications, allergies } = req.body;
     
-    // Überprüfen, ob alle Pflichtfelder vorhanden sind
     if (!firstName || !lastName || !email || !emailConfirm || !password || !passwordConfirm || acceptPolicy === undefined) {
         return res.status(400).json({ message: "Alle Pflichtfelder sind erforderlich!" });
     }
-    
-    // E-Mail & Passwort-Bestätigung prüfen
     if (email !== emailConfirm) {
         return res.status(400).json({ message: "E-Mails stimmen nicht überein!" });
     }
@@ -37,7 +36,6 @@ router.post('/register', async (req, res) => {
         return res.status(400).json({ message: "Passwörter stimmen nicht überein!" });
     }
 
-    // Passwort-Hashing
     const hashedPassword = await bcrypt.hash(password, 10);
 
     try {
@@ -49,7 +47,8 @@ router.post('/register', async (req, res) => {
         conn.release();
         res.status(201).json({ message: "Registrierung erfolgreich" });
     } catch (error) {
-        res.status(500).json({ message: "Fehler bei der Registrierung", error });
+        console.error("🔥 Fehler bei der Registrierung:", error);
+        res.status(500).json({ message: "Registrierung fehlgeschlagen", error: error.message || error });
     }
 });
 
@@ -60,21 +59,37 @@ router.post('/login', async (req, res) => {
 
     try {
         const conn = await pool.getConnection();
-        const rows = await conn.query('SELECT * FROM users WHERE email = ?', [email]);
+        const rows = await conn.query("SELECT * FROM users WHERE email = ?", [email]);
         conn.release();
 
-        if (rows.length === 0) return res.status(401).json({ message: "Benutzer nicht gefunden" });
+        if (rows.length === 0) {
+            return res.status(401).json({ message: "Benutzer nicht gefunden" });
+        }
+
         const user = rows[0];
-        
         const match = await bcrypt.compare(password, user.password);
-        if (!match) return res.status(401).json({ message: "Falsches Passwort" });
+
+        if (!match) {
+            return res.status(401).json({ message: "Falsches Passwort" });
+        }
 
         const token = generateToken(user);
-        res.json({ token, user: { id: user.id, email: user.email, firstName: user.firstName, lastName: user.lastName, dob: user.dob, medications: user.medications, allergies: user.allergies } });
+        return res.json({
+            token,
+            user: {
+                id: user.id,
+                email: user.email,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                dob: user.dob,
+                medications: user.medications,
+                allergies: user.allergies
+            }
+        });
     } catch (error) {
-        res.status(500).json({ message: "Login fehlgeschlagen", error });
+        console.error("🔥 Fehler beim Login:", error);
+        return res.status(500).json({ message: "Login fehlgeschlagen", error: error.message || error });
     }
 });
 
 export default router;
-
