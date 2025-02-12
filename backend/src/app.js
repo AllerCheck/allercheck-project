@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import authRoutes from './routes/auth.js';  // Korrigierter Pfad
-import pool from '../config/db.js';          // Korrigierter Pfad
+import pool from './config/db.js';          // Korrigierter Pfad
 
 dotenv.config();
 
