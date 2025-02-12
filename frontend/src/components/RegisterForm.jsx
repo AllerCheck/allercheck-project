@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 function RegisterForm() {
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">
