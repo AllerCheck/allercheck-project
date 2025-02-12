@@ -1,47 +1,62 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 function LoginForm() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const response = await fetch("http://localhost:5000/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      // Save the token to localStorage (or sessionStorage)
+      localStorage.setItem("token", data.token);
+
+      // Redirect to Home page
+      navigate("/"); // Redirect to Home after successful login
+    } else {
+      alert(data.message); // Display error message from backend
+    }
+  };
+
   return (
     <div className="flex flex-col justify-center items-center min-h-screen bg-gray-100 p-4">
-      <form className="bg-white p-6 rounded-lg shadow-md w-80">
+      <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md w-80">
         <h2 className="text-2xl font-semibold text-center mb-4">Login</h2>
 
-        <label
-          htmlFor="email"
-          className="block text-sm font-medium text-gray-700"
-        >
-          Email
-        </label>
+        <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
         <input
-          type="text"
+          type="email"
           id="email"
-          className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-3"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 mb-3"
         />
 
-        <label
-          htmlFor="password"
-          className="block text-sm font-medium text-gray-700"
-        >
-          Password
-        </label>
+        <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
         <input
           type="password"
           id="password"
-          className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 mb-4"
         />
 
-        <button
-          type="submit"
-          className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition duration-200"
-        >
+        <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition duration-200">
           Login
         </button>
 
         <p className="text-sm text-center mt-3">
-          Don't have an account?{" "}
-          <Link to="/register" className="text-blue-500 hover:underline">
-            Register
-          </Link>
+          Don't have an account? <Link to="/register" className="text-blue-500 hover:underline">Register</Link>
         </p>
       </form>
 
@@ -83,6 +98,7 @@ function LoginForm() {
           Sign up today and take control of your health with Allercheck!
         </p>
       </div>
+
     </div>
   );
 }

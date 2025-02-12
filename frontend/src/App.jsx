@@ -1,6 +1,9 @@
+import { Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
+import LoginForm from "./components/LoginForm";
+import RegisterForm from "./components/RegisterForm";
 
 function App() {
   return (
@@ -8,7 +11,11 @@ function App() {
       <Header />
 
       <main className="flex-grow overflow-y-auto pb-4">
-        <Home />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<LoginForm />} />
+          <Route path="/register" element={<RegisterForm />} />
+        </Routes>
       </main>
 
       <footer className="mt-auto">

@@ -1,4 +1,49 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 function RegisterForm() {
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    emailConfirm: "",
+    password: "",
+    passwordConfirm: "",
+    dob: "",
+    medications: "",
+    allergies: "",
+    acceptPolicy: false,
+  });
+
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData({
+      ...formData,
+      [name]: type === "checkbox" ? checked : value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const response = await fetch("http://localhost:5000/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      alert("Registration successful!");
+      navigate("/login");
+    } else {
+      alert(data.message);
+    }
+  };
+
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">
       <form className="bg-white p-6 rounded-lg shadow-md w-full max-w-lg">
@@ -56,4 +101,5 @@ function RegisterForm() {
     </div>
   );
 }
+
 export default RegisterForm;
