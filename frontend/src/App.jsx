@@ -1,6 +1,7 @@
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
+import LoginForm from "./components/LoginForm";
 
 function App() {
   return (
@@ -9,6 +10,7 @@ function App() {
       
       <main className="flex-grow overflow-y-auto pb-4">
         <Home />
+        <LoginForm />
       </main>
 
       <footer className="mt-auto">
