@@ -1,46 +1,60 @@
+import { Link } from "react-router-dom";
 function RegisterForm() {
-    return (
-      <div className="flex justify-center items-center min-h-screen bg-gray-100">
-        <form className="bg-white p-6 rounded-lg shadow-md w-80">
-          <h2 className="text-2xl font-semibold text-center mb-4">Register</h2>
-  
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-            Email
-          </label>
-          <input
-            type="text"
-            id="email"
-            className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-3"
-          />
-  
-          <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-            Password
-          </label>
-          <input
-            type="password"
-            id="password"
-            className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-3"
-          />
-  
-          <label htmlFor="retype-password" className="block text-sm font-medium text-gray-700">
-            Re-type Password
-          </label>
-          <input
-            type="password"
-            id="retype-password"
-            className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4"
-          />
-  
-          <button
-            type="submit"
-            className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition duration-200"
-          >
-            Register
-          </button>
-        </form>
-      </div>
-    );
-  }
-  
-  export default RegisterForm;
-  
+  return (
+    <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">
+      <form className="bg-white p-6 rounded-lg shadow-md w-full max-w-lg">
+        <h2 className="text-2xl font-semibold text-center mb-4">Register</h2>
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label className="block text-sm font-medium text-gray-700">First Name <span className="text-red-500">*</span></label>
+            <input type="text" className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Last Name <span className="text-red-500">*</span></label>
+            <input type="text" className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-3 mt-3">
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Email <span className="text-red-500">*</span></label>
+            <input type="email" className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Repeat Email <span className="text-red-500">*</span></label>
+            <input type="email" className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-3 mt-3">
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Password <span className="text-red-500">*</span></label>
+            <input type="password" className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Repeat Password <span className="text-red-500">*</span></label>
+            <input type="password" className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          </div>
+        </div>
+        <div className="mt-3">
+          <label className="block text-sm font-medium text-gray-700">D.O.B</label>
+          <input type="date" className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        </div>
+        <div className="flex items-center mt-3">
+          <input type="checkbox" className="mr-2" />
+          <label className="text-sm font-medium text-gray-700">Accept Policy <span className="text-red-500">*</span></label>
+        </div>
+        <div className="mt-3">
+          <label className="block text-sm font-medium text-gray-700">Medications:</label>
+          <input type="text" className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        </div>
+        <div className="mt-3">
+          <label className="block text-sm font-medium text-gray-700">Allergies:</label>
+          <input type="text" className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        </div>
+        <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition duration-200 mt-4">
+          Register now
+        </button>
+      </form>
+    </div>
+  );
+}
+export default RegisterForm;
