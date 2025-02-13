@@ -3,96 +3,64 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import mariadb from 'mariadb';
 import dotenv from 'dotenv';
+import pool from '../config/db.js'; 
 
 dotenv.config();
 
 const router = express.Router();
 
-const pool = mariadb.createPool({
-    host: process.env.DB_HOST,
-    port: process.env.DB_PORT,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASS,
-    database: process.env.DB_NAME,
-    connectionLimit: 10,
-    acquireTimeout: 30000
-});
-
-const generateToken = (user) => {
-    return jwt.sign(
-        { id: user.id, email: user.email },
-        process.env.JWT_SECRET,
-        { expiresIn: '24h' }
-    );
-};
-
-// Registrierung
+// 🟢 Registrierung eines neuen Nutzers
 router.post('/register', async (req, res) => {
-    const { firstName, lastName, email, emailConfirm, password, passwordConfirm, acceptPolicy, dob, medications, allergies } = req.body;
-    
-    if (!firstName || !lastName || !email || !emailConfirm || !password || !passwordConfirm || acceptPolicy === undefined) {
-        return res.status(400).json({ message: "Alle Pflichtfelder sind erforderlich!" });
-    }
-    if (email !== emailConfirm) {
-        return res.status(400).json({ message: "E-Mails stimmen nicht überein!" });
-    }
-    if (password !== passwordConfirm) {
-        return res.status(400).json({ message: "Passwörter stimmen nicht überein!" });
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-
     try {
+        const { first_name, last_name, email, password, dob, medications, allergies, acceptPolicy } = req.body;
+
+        // Passwort hashen
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Nutzer in der Datenbank speichern
         const conn = await pool.getConnection();
         await conn.query(
-            'INSERT INTO users (firstName, lastName, email, password, dob, medications, allergies, acceptPolicy) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-            [firstName, lastName, email, hashedPassword, dob || null, medications || null, allergies || null, acceptPolicy]
+            "INSERT INTO users (first_name, last_name, email, password, dob, medications, allergies, acceptPolicy) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+            [first_name, last_name, email, hashedPassword, dob, medications, allergies, acceptPolicy]
         );
         conn.release();
-        res.status(201).json({ message: "Registrierung erfolgreich" });
+
+        res.status(201).json({ message: 'Nutzer erfolgreich registriert' });
     } catch (error) {
-        console.error("🔥 Fehler bei der Registrierung:", error);
-        res.status(500).json({ message: "Registrierung fehlgeschlagen", error: error.message || error });
+        console.error('🔥 Fehler bei der Registrierung:', error);
+        res.status(500).json({ message: 'Interner Serverfehler', error: error.message });
     }
 });
 
-// Login
+// 🟠 Nutzer-Login
 router.post('/login', async (req, res) => {
-    const { email, password } = req.body;
-    if (!email || !password) return res.status(400).json({ message: "E-Mail und Passwort erforderlich!" });
-
     try {
+        const { email, password } = req.body;
+
+        // Nutzer anhand der E-Mail suchen
         const conn = await pool.getConnection();
         const rows = await conn.query("SELECT * FROM users WHERE email = ?", [email]);
         conn.release();
 
         if (rows.length === 0) {
-            return res.status(401).json({ message: "Benutzer nicht gefunden" });
+            return res.status(401).json({ message: 'Ungültige Anmeldeinformationen' });
         }
 
         const user = rows[0];
-        const match = await bcrypt.compare(password, user.password);
 
-        if (!match) {
-            return res.status(401).json({ message: "Falsches Passwort" });
+        // Passwort überprüfen
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+        if (!isPasswordValid) {
+            return res.status(401).json({ message: 'Ungültige Anmeldeinformationen' });
         }
 
-        const token = generateToken(user);
-        return res.json({
-            token,
-            user: {
-                id: user.id,
-                email: user.email,
-                firstName: user.firstName,
-                lastName: user.lastName,
-                dob: user.dob,
-                medications: user.medications,
-                allergies: user.allergies
-            }
-        });
+        // JWT-Token erstellen
+        const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '24h' });
+
+        res.json({ message: 'Login erfolgreich', token });
     } catch (error) {
-        console.error("🔥 Fehler beim Login:", error);
-        return res.status(500).json({ message: "Login fehlgeschlagen", error: error.message || error });
+        console.error('🔥 Fehler beim Login:', error);
+        res.status(500).json({ message: 'Interner Serverfehler', error: error.message });
     }
 });
 

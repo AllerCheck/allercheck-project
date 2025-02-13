@@ -104,4 +104,25 @@ router.put('/update-auth', async (req, res) => {
     }
 });
 
+// Profil löschen
+router.delete('/delete', async (req, res) => {
+    try {
+        const authHeader = req.headers['authorization'];
+        if (!authHeader) return res.status(401).json({ message: "Kein Token vorhanden" });
+
+        const token = authHeader.split(" ")[1];
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+        const conn = await pool.getConnection();
+        await conn.query("DELETE FROM users WHERE id = ?", [decoded.id]);
+        conn.release();
+
+        res.json({ message: "Profil erfolgreich gelöscht" });
+    } catch (error) {
+        console.error("🔥 Fehler beim Löschen des Profils:", error.message);
+        res.status(500).json({ message: "Fehler beim Löschen des Profils", error: error.message });
+    }
+});
+
+
 export default router;
