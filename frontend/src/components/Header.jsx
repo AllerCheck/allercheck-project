@@ -42,7 +42,8 @@ const Header = () => {
 
   return (
     <header className="bg-gray-300 p-4 flex justify-between items-center">
-      <h1 className="font-bold text-xl">AllerCheck</h1>
+      <h1 className="font-bold text-xl cursor-pointer"
+      onClick={() => navigate("/")}>AllerCheck</h1>
       <div className="flex gap-4 items-center">
         <span onClick={handleLoginClick} className="cursor-pointer flex items-center gap-2">
           {token ? (
