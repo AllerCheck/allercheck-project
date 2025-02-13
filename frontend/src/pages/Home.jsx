@@ -1,4 +1,18 @@
+import { useNavigate } from "react-router-dom";
+
 function Home() {
+  const navigate = useNavigate();
+
+  const handleNavigation = (path) => {
+    const isAuthenticated = localStorage.getItem("token"); // Check user authentication
+    console.log("isAuthenticated", isAuthenticated);
+    if (isAuthenticated) {
+      navigate(path); // Go to the requested page if authenticated
+    } else {
+      navigate("/login"); // Redirect to login if not authenticated
+    }
+  };
+
   return (
     <div className="flex flex-col">
       <h1 className="text-center font-bold text-4xl mt-6 mb-6">
@@ -17,13 +31,21 @@ function Home() {
 
       {/* Buttons section */}
       <div className="flex justify-center space-x-4 mt-6">
-        <button className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition cursor-pointer">
+        <button
+          className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition cursor-pointer"
+        >
           Barcode Scanner
         </button>
-        <button className="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-700 transition cursor-pointer">
+        <button
+          onClick={() => handleNavigation("/allergy-journal")}
+          className="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-700 transition cursor-pointer"
+        >
           Allergy Journal
         </button>
-        <button className="bg-yellow-500 text-white py-2 px-4 rounded-md hover:bg-yellow-700 transition cursor-pointer">
+        <button
+          onClick={() => handleNavigation("/appointments")}
+          className="bg-yellow-500 text-white py-2 px-4 rounded-md hover:bg-yellow-700 transition cursor-pointer"
+        >
           Appointments
         </button>
       </div>
