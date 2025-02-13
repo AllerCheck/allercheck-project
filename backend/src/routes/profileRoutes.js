@@ -19,28 +19,41 @@ const pool = mariadb.createPool({
 });
 
 // Profil abrufen
-router.get('/profile', async (req, res) => {
+router.get('/', async (req, res) => {
     try {
         const authHeader = req.headers['authorization'];
-        if (!authHeader) return res.status(401).json({ message: "Kein Token vorhanden" });
+        console.log("🔍 Auth Header:", authHeader);
+
+        if (!authHeader) {
+            return res.status(401).json({ message: "Kein Token vorhanden" });
+        }
 
         const token = authHeader.split(" ")[1];
+        console.log("🔍 Extracted Token:", token);
+
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        console.log("✅ Token valid:", decoded);
 
         const conn = await pool.getConnection();
-        const rows = await conn.query("SELECT id, first_name, last_name, email, dob, medications, allergies FROM users WHERE id = ?", [decoded.id]);
+        const rows = await conn.query("SELECT * FROM users WHERE id = ?", [decoded.id]);
         conn.release();
 
-        if (rows.length === 0) return res.status(404).json({ message: "Benutzer nicht gefunden" });
+        if (rows.length === 0) {
+            console.log("❌ Benutzer nicht gefunden in der Datenbank");
+            return res.status(404).json({ message: "Benutzer nicht gefunden" });
+        }
 
+        console.log("✅ Benutzer erfolgreich abgerufen:", rows[0]);
         res.json(rows[0]);
+
     } catch (error) {
-        res.status(500).json({ message: "Fehler beim Abrufen der Daten", error: error.message });
+        console.error("🔥 Fehler bei der Token-Verarbeitung:", error.message);
+        res.status(401).json({ message: "Token ungültig oder fehlt", error: error.message });
     }
 });
 
 // E-Mail & Passwort aktualisieren
-router.put('/profile/update-auth', async (req, res) => {
+router.put('/update-auth', async (req, res) => {
     const { email, password } = req.body;
     try {
         const authHeader = req.headers['authorization'];
@@ -62,7 +75,7 @@ router.put('/profile/update-auth', async (req, res) => {
 });
 
 // Medikamente & Allergien aktualisieren
-router.put('/profile/update-health', async (req, res) => {
+router.put('/update-health', async (req, res) => {
     const { medications, allergies } = req.body;
     try {
         const authHeader = req.headers['authorization'];
@@ -82,3 +95,4 @@ router.put('/profile/update-health', async (req, res) => {
 });
 
 export default router;
+
