@@ -8,7 +8,7 @@ import { ProfilePage } from "./pages/Profile";
 
 function App() {
   return (
-    <div className="flex flex-col min-h-screen bg-yellow-50">
+    <div className="flex flex-col min-h-screen bg-white-50">
       <Header />
 
       <main className="flex-grow overflow-y-auto pb-4">
