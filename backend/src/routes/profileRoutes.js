@@ -60,6 +60,28 @@ router.get('/', async (req, res) => {
     }
 });
 
+// Profil bearbeiten
+router.put('/update', async (req, res) => {
+    const { first_name, last_name, dob, medications, allergies } = req.body;
+    try {
+        const authHeader = req.headers['authorization'];
+        if (!authHeader) return res.status(401).json({ message: "Kein Token vorhanden" });
+
+        const token = authHeader.split(" ")[1];
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+        const conn = await pool.getConnection();
+        await conn.query("UPDATE users SET first_name = ?, last_name = ?, dob = ?, medications = ?, allergies = ? WHERE id = ?", 
+                         [first_name, last_name, dob, medications, allergies, decoded.id]);
+        conn.release();
+
+        res.json({ message: "Profil erfolgreich aktualisiert" });
+    } catch (error) {
+        res.status(500).json({ message: "Fehler beim Aktualisieren des Profils", error: error.message });
+    }
+});
+
+
 // E-Mail & Passwort aktualisieren
 router.put('/update-auth', async (req, res) => {
     const { email, password } = req.body;
