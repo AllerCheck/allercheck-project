@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 
 const Header = () => {
@@ -42,10 +42,14 @@ const Header = () => {
 
   return (
     <header className="bg-gray-300 p-4 flex justify-between items-center">
-      <h1 className="font-bold text-xl cursor-pointer"
-      onClick={() => navigate("/")}>AllerCheck</h1>
+      <Link to="/" className="font-bold text-xl">
+        AllerCheck
+      </Link>
       <div className="flex gap-4 items-center">
-        <span onClick={handleLoginClick} className="cursor-pointer flex items-center gap-2">
+        <span
+          onClick={handleLoginClick}
+          className="cursor-pointer flex items-center gap-2"
+        >
           {token ? (
             username || "User"
           ) : (
