@@ -2,13 +2,15 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import authRoutes from './routes/auth.js';  // Korrigierter Pfad
-import pool from './config/db.js';          // Korrigierter Pfad
+import pool from './config/db.js';   
+import profileRoutes from "./routes/profileRoutes.js";       // Korrigierter Pfad
 
 dotenv.config();
 
 const app = express();
 app.use(express.json());
 app.use(cors());
+app.use("/profile", profileRoutes);
 
 // Testverbindung zur Datenbank
 pool.getConnection()
