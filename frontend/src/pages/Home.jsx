@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 function Home() {
   const navigate = useNavigate();
@@ -30,21 +31,22 @@ function Home() {
       </div>
 
       {/* Buttons section */}
-      <div className="flex justify-center space-x-4 mt-6">
-        <button
-          className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition cursor-pointer"
+      <div className="flex justify-center space-x-8 mt-6">
+        <Link
+          to="/barcode-scanner"
+          className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition text-center max-w-32 inline-block"
         >
           Barcode Scanner
-        </button>
+        </Link>
         <button
           onClick={() => handleNavigation("/allergy-journal")}
-          className="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-700 transition cursor-pointer"
+          className="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-700 transition cursor-pointer max-w-32 inline-block"
         >
           Allergy Journal
         </button>
         <button
           onClick={() => handleNavigation("/appointments")}
-          className="bg-yellow-500 text-white py-2 px-4 rounded-md hover:bg-yellow-700 transition cursor-pointer"
+          className="bg-yellow-500 text-white py-2 px-4 rounded-md hover:bg-yellow-700 transition cursor-pointer max-w-32 inline-block"
         >
           Appointments
         </button>
