@@ -10,7 +10,10 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 app.use(cors());
+
+// API-Routen registrieren
 app.use("/profile", profileRoutes);
+app.use("/auth", authRoutes);
 
 // Testverbindung zur Datenbank
 pool.getConnection()
@@ -22,11 +25,9 @@ pool.getConnection()
         console.error('Fehler bei der Verbindung zur Datenbank:', err);
     });
 
-// API-Routen
-app.use('/auth', authRoutes);
-
 app.get('/', (req, res) => {
     res.send('AllerCheck Backend läuft!');
 });
 
 export default app;
+

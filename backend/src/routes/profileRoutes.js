@@ -18,32 +18,40 @@ const pool = mariadb.createPool({
     acquireTimeout: 30000
 });
 
-// Profil abrufen
+// Profil abrufen mit Debugging
 router.get('/', async (req, res) => {
     try {
-        const authHeader = req.headers['authorization'];
-        console.log("🔍 Auth Header:", authHeader);
+        let authHeader = req.headers['authorization'];
+        console.log("🔍 Rohdaten-Header:", req.headers);
 
         if (!authHeader) {
             return res.status(401).json({ message: "Kein Token vorhanden" });
         }
 
+        // Entferne Leerzeichen am Anfang und Ende
+        authHeader = authHeader.trim();
+        console.log("🔍 Bereinigter Header:", authHeader);
+
+        if (!authHeader.startsWith("Bearer ")) {
+            return res.status(401).json({ message: "Ungültiges Token-Format" });
+        }
+
         const token = authHeader.split(" ")[1];
-        console.log("🔍 Extracted Token:", token);
+        console.log("🔍 Extrahiertes Token:", token);
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         console.log("✅ Token valid:", decoded);
 
         const conn = await pool.getConnection();
-        const rows = await conn.query("SELECT * FROM users WHERE id = ?", [decoded.id]);
+        const rows = await conn.query("SELECT first_name, last_name, email, dob, medications, allergies FROM users WHERE id = ?", [decoded.id]);
         conn.release();
 
         if (rows.length === 0) {
-            console.log("❌ Benutzer nicht gefunden in der Datenbank");
+            console.log("❌ Kein Benutzer mit dieser ID gefunden:", decoded.id);
             return res.status(404).json({ message: "Benutzer nicht gefunden" });
         }
 
-        console.log("✅ Benutzer erfolgreich abgerufen:", rows[0]);
+        console.log("✅ Benutzer gefunden:", rows[0]);
         res.json(rows[0]);
 
     } catch (error) {
@@ -74,25 +82,4 @@ router.put('/update-auth', async (req, res) => {
     }
 });
 
-// Medikamente & Allergien aktualisieren
-router.put('/update-health', async (req, res) => {
-    const { medications, allergies } = req.body;
-    try {
-        const authHeader = req.headers['authorization'];
-        if (!authHeader) return res.status(401).json({ message: "Kein Token vorhanden" });
-
-        const token = authHeader.split(" ")[1];
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-        const conn = await pool.getConnection();
-        await conn.query("UPDATE users SET medications = ?, allergies = ? WHERE id = ?", [medications, allergies, decoded.id]);
-        conn.release();
-
-        res.json({ message: "Medikationen und Allergien erfolgreich aktualisiert" });
-    } catch (error) {
-        res.status(500).json({ message: "Fehler beim Aktualisieren der Gesundheitsdaten", error: error.message });
-    }
-});
-
 export default router;
-
