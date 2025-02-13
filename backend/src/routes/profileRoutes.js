@@ -104,6 +104,30 @@ router.put('/update-auth', async (req, res) => {
     }
 });
 
+// 🟢 Allergien abrufen
+router.get('/allergies', async (req, res) => {
+    try {
+        const conn = await pool.getConnection();
+        const rows = await conn.query("SELECT * FROM allergies");
+        conn.release();
+        res.json(rows);
+    } catch (error) {
+        res.status(500).json({ message: "Fehler beim Abrufen der Allergien", error: error.message });
+    }
+});
+
+// 🟢 Medikamente abrufen
+router.get('/medications', async (req, res) => {
+    try {
+        const conn = await pool.getConnection();
+        const rows = await conn.query("SELECT * FROM medications");
+        conn.release();
+        res.json(rows);
+    } catch (error) {
+        res.status(500).json({ message: "Fehler beim Abrufen der Medikamente", error: error.message });
+    }
+});
+
 // Profil löschen
 router.delete('/delete', async (req, res) => {
     try {
