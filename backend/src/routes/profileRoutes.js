@@ -21,7 +21,7 @@ const pool = mariadb.createPool({
 // Profil abrufen mit Debugging
 router.get('/', async (req, res) => {
     try {
-        let authHeader = req.headers['Authorization'];
+        let authHeader = req.headers['authorization'];
         console.log("🔍 Rohdaten-Header:", req.headers);
 
         if (!authHeader) {
