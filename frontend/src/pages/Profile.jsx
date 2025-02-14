@@ -68,6 +68,14 @@ const ProfilePage = () => {
     setShowPopup(true); // Show the popup when the form is successfully submitted
   };
 
+  const formatDateForInput = (isoDateString) => {
+    const date = new Date(isoDateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-indexed
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
   return (
     <div className="flex flex-col items-center py-10">
       <div className="mb-10">
@@ -99,7 +107,7 @@ const ProfilePage = () => {
           <input
             type="date"
             name="dob"
-            value={formData.dob}
+            value={formData.dob ? formatDateForInput(formData.dob) : ""}
             className="w-full p-2 border rounded"
             onChange={handleChange}
             required
