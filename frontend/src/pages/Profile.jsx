@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import NavigationButtons from "../components/NavigationButtons";
-import { getProfile } from "../api/ProfileApi";
+import { getProfile, updateProfile, updateAuth, getAllergies, getMedications } from "../api/ProfileApi";
 import { Navigate } from "react-router-dom";
 
 const ProfilePage = () => {
@@ -9,12 +9,7 @@ const ProfilePage = () => {
     console.log("No token found, redirecting to login");
     Navigate("/login");
   }
-  useEffect(() => {
-    getProfile(token).then((data) => {
-      console.log("Profile Data:", data);
-      setFormData(data);
-    });
-  }, [token]);
+
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
@@ -22,14 +17,49 @@ const ProfilePage = () => {
     email: "",
     newEmail: "",
     medications: "",
-    allergies: "",
+    allergies: "", // Allergies will be stored as a string
     currentPassword: "",
     newPassword: "",
     repeatPassword: "",
   });
+
   const [passwordError, setPasswordError] = useState("");
   const [emailError, setEmailError] = useState("");
-  const [showPopup, setShowPopup] = useState(false); // State for controlling the popup
+  const [showPopup, setShowPopup] = useState(false);
+
+  // Fetch profile data and allergies when the component mounts
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Fetch profile data
+        const profileData = await getProfile(token);
+        console.log("Profile Data:", profileData);
+        setFormData((prevData) => ({
+          ...prevData,
+          first_name: profileData.first_name,
+          last_name: profileData.last_name,
+          dob: profileData.dob,
+          email: profileData.email,
+          medications: profileData.medications,
+        }));
+
+        // Fetch allergies
+        const allergiesData = await getAllergies(token);
+        console.log("Allergies Data:", allergiesData);
+
+        // Extract allergy names and join them into a string
+        const allergyNames = allergiesData.map((allergy) => allergy.name).join(", ");
+        setFormData((prevData) => ({
+          ...prevData,
+          allergies: allergyNames, // Store as a string
+        }));
+      } catch (error) {
+        console.error("Failed to fetch data:", error);
+      }
+    };
+
+    fetchData();
+  }, [token]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -179,6 +209,12 @@ const ProfilePage = () => {
             className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
           >
             Save Profile
+          </button>
+          <button
+            type="submit"
+            className="w-full bg-red-500 text-white p-2 rounded hover:bg-red-600"
+          >
+            Delete Profile
           </button>
         </form>
       </div>

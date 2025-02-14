@@ -33,3 +33,13 @@ export const updateAuth = async (token, authData) => {
     });
     return response.json();
 };
+
+export const getAllergies = async () => {
+    const response = await fetch("http://localhost:5000/profile/allergies");
+    return response.json();
+};
+
+export const getMedications = async () => {
+    const response = await fetch("http://localhost:5000/profile/medications");
+    return response.json();
+};

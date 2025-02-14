@@ -1,5 +1,5 @@
 import Home from "./pages/Home";
-import Profile, { ProfilePage } from "./pages/Profile";
+import { ProfilePage } from "./pages/Profile";
 import LoginForm from "./components/LoginForm";
 import RegisterForm from "./components/RegisterForm";
 import { Navigate } from "react-router-dom";
