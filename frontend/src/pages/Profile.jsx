@@ -1,10 +1,23 @@
-import React, { useState } from "react";
-import NavigationButtons from "../components/NavigationButtons"; // Adjust the path if needed
+import { useState, useEffect } from "react";
+import NavigationButtons from "../components/NavigationButtons";
+import { getProfile } from "../api/ProfileApi";
+import { Navigate } from "react-router-dom";
 
-const ProfilePage = ({ navigate }) => {
+const ProfilePage = () => {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    console.log("No token found, redirecting to login");
+    Navigate("/login");
+  }
+  useEffect(() => {
+    getProfile(token).then((data) => {
+      console.log("Profile Data:", data);
+      setFormData(data);
+    });
+  }, [token]);
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
+    first_name: "",
+    last_name: "",
     dob: "",
     email: "",
     newEmail: "",
@@ -58,7 +71,7 @@ const ProfilePage = ({ navigate }) => {
   return (
     <div className="flex flex-col items-center py-10">
       <div className="mb-10">
-        <NavigationButtons navigate={navigate} />
+        <NavigationButtons />
       </div>
       <div className="bg-white p-6 rounded-lg shadow-lg w-96">
         <h2 className="text-2xl font-semibold text-center mb-4">
@@ -68,6 +81,7 @@ const ProfilePage = ({ navigate }) => {
           <input
             type="text"
             name="firstName"
+            value={formData.first_name}
             placeholder="First Name"
             className="w-full p-2 border rounded"
             onChange={handleChange}
@@ -76,6 +90,7 @@ const ProfilePage = ({ navigate }) => {
           <input
             type="text"
             name="lastName"
+            value={formData.last_name}
             placeholder="Last Name"
             className="w-full p-2 border rounded"
             onChange={handleChange}
@@ -84,6 +99,7 @@ const ProfilePage = ({ navigate }) => {
           <input
             type="date"
             name="dob"
+            value={formData.dob}
             className="w-full p-2 border rounded"
             onChange={handleChange}
             required
@@ -91,6 +107,7 @@ const ProfilePage = ({ navigate }) => {
           <input
             type="email"
             name="email"
+            value={formData.email}
             placeholder="Email"
             className="w-full p-2 border rounded"
             onChange={handleChange}
@@ -108,6 +125,7 @@ const ProfilePage = ({ navigate }) => {
           <input
             type="text"
             name="medications"
+            value={formData.medications}
             placeholder="Medications"
             className="w-full p-2 border rounded"
             onChange={handleChange}
@@ -115,6 +133,7 @@ const ProfilePage = ({ navigate }) => {
           <input
             type="text"
             name="allergies"
+            value={formData.allergies}
             placeholder="Allergies"
             className="w-full p-2 border rounded"
             onChange={handleChange}
@@ -122,6 +141,7 @@ const ProfilePage = ({ navigate }) => {
           <input
             type="password"
             name="currentPassword"
+            value={formData.currentPassword}
             placeholder="Current Password"
             className="w-full p-2 border rounded"
             onChange={handleChange}

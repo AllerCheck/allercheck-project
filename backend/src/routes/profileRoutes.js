@@ -43,7 +43,7 @@ router.get('/', async (req, res) => {
         console.log("✅ Token valid:", decoded);
 
         const conn = await pool.getConnection();
-        const rows = await conn.query("SELECT first_name, last_name, email, dob, medications, allergies FROM users WHERE id = ?", [decoded.id]);
+        const rows = await conn.query("SELECT * FROM users WHERE id = ?", [decoded.id]);
         conn.release();
 
         if (rows.length === 0) {
