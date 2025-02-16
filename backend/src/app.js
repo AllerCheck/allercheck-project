@@ -6,6 +6,7 @@ import pool from './config/db.js';
 import profileRoutes from "./routes/profileRoutes.js";       // Korrigierter Pfad
 import appointmentRoutes from "./routes/appointments.js";
 import allergyJournalRoutes from "./routes/AllergyJournal.js";
+import googleMapsRoutes from "./routes/GoogleMaps.js";
 
 dotenv.config();
 
@@ -13,7 +14,8 @@ const app = express();
 app.use(express.json());  // 📌 JSON-Parsing muss aktiviert sein
 app.use(express.urlencoded({ extended: true })); 
 app.use("/appointments", appointmentRoutes);
-app.use("/journal", allergyJournalRoutes); // 📌 Für URL-encoded Daten
+app.use("/journal", allergyJournalRoutes); 
+app.use("/google-maps", googleMapsRoutes);// 📌 Für URL-encoded Daten
 app.use(cors());
 
 // API-Routen registrieren
