@@ -13,10 +13,11 @@ dotenv.config();
 const app = express();
 app.use(express.json());  // 📌 JSON-Parsing muss aktiviert sein
 app.use(express.urlencoded({ extended: true })); 
+app.use(cors());
 app.use("/appointments", appointmentRoutes);
 app.use("/journal", allergyJournalRoutes); 
 app.use("/google-maps", googleMapsRoutes);// 📌 Für URL-encoded Daten
-app.use(cors());
+
 
 // API-Routen registrieren
 app.use("/profile", profileRoutes);
