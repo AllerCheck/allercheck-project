@@ -1,7 +1,15 @@
 import { useState, useEffect } from "react";
-import NavigationButtons from "../components/NavigationButtons";
-import { getProfile, getAllergies } from "../api/ProfileApi";
+import {
+  getProfile,
+  getAllergies,
+  getMedications,
+  updateProfile,
+  updateEmail,
+  updatePassword,
+  deleteProfile,
+} from "../api/ProfileApi";
 import { Navigate } from "react-router-dom";
+import NavigationButtons from "../components/NavigationButtons";
 
 const ProfilePage = () => {
   const token = localStorage.getItem("token");
@@ -16,101 +24,119 @@ const ProfilePage = () => {
     dob: "",
     email: "",
     newEmail: "",
-    medications: "",
-    allergies: "",
-    currentPassword: "",
+    medications: "Not listed", // Default value for medications
+    allergies: "Not listed", // Default value for allergies
+    oldPassword: "",
     newPassword: "",
-    repeatPassword: "",
   });
 
-  const [passwordError, setPasswordError] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [showPopup, setShowPopup] = useState(false);
-  const [isEditingEmail, setIsEditingEmail] = useState(false); // Track email editing state
+  const [showNewEmailSheet, setShowNewEmailSheet] = useState(false); // Toggle for new email sheet
+  const [showNewPasswordFields, setShowNewPasswordFields] = useState(false); // Toggle for password fields
+  const [error, setError] = useState(""); // To show errors
 
-  // Fetch profile data and allergies when the component mounts
+  // Fetch profile data, allergies, and medications on mount
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch profile data
         const profileData = await getProfile(token);
-        console.log("Profile Data:", profileData);
         setFormData((prevData) => ({
           ...prevData,
           first_name: profileData.first_name,
           last_name: profileData.last_name,
           dob: profileData.dob,
           email: profileData.email,
-          medications: profileData.medications,
         }));
 
-        // Fetch allergies
-        const allergiesData = await getAllergies(token);
-        console.log("Allergies Data:", allergiesData);
-
-        // Extract allergy names and join them into a string
-        const allergyNames = allergiesData
-          .map((allergy) => allergy.name)
-          .join(", ");
+        const allergiesData = await getAllergies();
         setFormData((prevData) => ({
           ...prevData,
-          allergies: allergyNames, // Store as a string
+          allergies:
+            allergiesData.length > 0
+              ? allergiesData.map((allergy) => allergy.name).join(", ")
+              : "Not listed", // Check if allergies are listed
+        }));
+
+        const medicationsData = await getMedications();
+        setFormData((prevData) => ({
+          ...prevData,
+          medications:
+            medicationsData.length > 0
+              ? medicationsData.map((med) => med.name).join(", ")
+              : "Not listed", // Check if medications are listed
         }));
       } catch (error) {
-        console.error("Failed to fetch data:", error);
+        console.error("Error fetching profile data:", error);
+        setError("Failed to load profile data.");
       }
     };
 
     fetchData();
   }, [token]);
 
+  // Handle input changes
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-
-    if (e.target.name === "repeatPassword" || e.target.name === "newPassword") {
-      if (formData.newPassword !== e.target.value) {
-        setPasswordError("Passwords do not match");
-      } else {
-        setPasswordError("");
-      }
-    }
-
-    if (e.target.name === "newEmail") {
-      if (formData.email === e.target.value) {
-        setEmailError("New email must be different from current email");
-      } else {
-        setEmailError("");
-      }
-    }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    if (formData.newPassword !== formData.repeatPassword) {
-      setPasswordError("Passwords do not match");
-      return;
-    }
-
-    if (formData.email === formData.newEmail) {
-      setEmailError("New email must be different from current email");
-      return;
-    }
-
-    console.log("Profile Data Submitted:", formData);
-    setShowPopup(true); // Show the popup when the form is successfully submitted
-  };
-
+  // Format date for input field
   const formatDateForInput = (isoDateString) => {
     const date = new Date(isoDateString);
     const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-indexed
+    const month = String(date.getMonth() + 1).padStart(2, "0");
     const day = String(date.getDate()).padStart(2, "0");
     return `${year}-${month}-${day}`;
   };
 
-  const toggleEmailEdit = () => {
-    setIsEditingEmail((prev) => !prev); // Toggle email edit state
+  // Toggle new email input field
+  const toggleNewEmailSheet = () => {
+    setShowNewEmailSheet(!showNewEmailSheet);
+  };
+
+  // Toggle new password input fields
+  const toggleNewPasswordFields = () => {
+    setShowNewPasswordFields(!showNewPasswordFields);
+  };
+
+  // Handle form submission (update profile, email, and password)
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      // If new email is provided, update email
+      if (formData.newEmail) {
+        await updateEmail(token, formData.newEmail);
+      }
+
+      // If old and new password are provided, update password
+      if (formData.oldPassword && formData.newPassword) {
+        await updatePassword(token, formData.oldPassword, formData.newPassword);
+      }
+
+      // Update profile data (if needed)
+      const profileUpdateData = {
+        first_name: formData.first_name,
+        last_name: formData.last_name,
+        dob: formData.dob,
+      };
+      await updateProfile(token, profileUpdateData);
+
+      setError(""); // Reset error state on successful update
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      setError("Failed to update profile.");
+    }
+  };
+
+  // Handle profile deletion
+  const handleDeleteProfile = async () => {
+    try {
+      await deleteProfile(token);
+      localStorage.removeItem("token"); // Remove token upon deletion
+      Navigate("/login"); // Redirect to login after profile deletion
+    } catch (error) {
+      console.error("Error deleting profile:", error);
+      setError("Failed to delete profile.");
+    }
   };
 
   return (
@@ -118,14 +144,18 @@ const ProfilePage = () => {
       <div className="mb-10">
         <NavigationButtons />
       </div>
+
+      {error && <div className="text-red-500 text-center mb-4">{error}</div>}
+
       <div className="bg-white p-6 rounded-lg shadow-lg w-96">
         <h2 className="text-2xl font-semibold text-center mb-4">
           Profile Information
         </h2>
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
             type="text"
-            name="firstName"
+            name="first_name"
             value={formData.first_name}
             placeholder="First Name"
             className="w-full p-2 border rounded"
@@ -134,7 +164,7 @@ const ProfilePage = () => {
           />
           <input
             type="text"
-            name="lastName"
+            name="last_name"
             value={formData.last_name}
             placeholder="Last Name"
             className="w-full p-2 border rounded"
@@ -150,102 +180,112 @@ const ProfilePage = () => {
             required
           />
 
-          {/* Current Email */}
-          <div className="relative w-full">
+          <div className="relative flex items-center">
             <input
               type="email"
               name="email"
               value={formData.email}
+              placeholder="Email"
               className="w-full p-2 border rounded"
+              onChange={handleChange}
               disabled
             />
             <span
-              className="absolute right-3 top-3 text-blue-500 cursor-pointer"
-              onClick={toggleEmailEdit} // Toggle email edit on click
+              onClick={toggleNewEmailSheet}
+              className="absolute right-2 cursor-pointer text-blue-500 hover:text-blue-700"
             >
-              ✏️
+              ✎
             </span>
           </div>
 
-          {/* New Email - Displayed under the current email when editing */}
-          {isEditingEmail && (
-            <input
-              type="email"
-              name="newEmail"
-              value={formData.newEmail}
-              placeholder="New Email"
-              className="w-full p-2 border rounded mt-2"
-              onChange={handleChange}
-              required
-            />
+          {showNewEmailSheet && (
+            <div className="mt-4">
+              <input
+                type="email"
+                name="newEmail"
+                value={formData.newEmail}
+                placeholder="Enter New Email"
+                className="w-full p-2 border rounded"
+                onChange={handleChange}
+              />
+            </div>
           )}
 
-          <input
-            type="text"
-            name="medications"
-            value={formData.medications}
-            placeholder="Medications"
-            className="w-full p-2 border rounded"
-            onChange={handleChange}
-          />
-          <input
-            type="text"
-            name="allergies"
-            value={formData.allergies}
-            placeholder="Allergies"
-            className="w-full p-2 border rounded"
-            onChange={handleChange}
-          />
-          <input
-            type="password"
-            name="currentPassword"
-            value={formData.currentPassword}
-            placeholder="Current Password"
-            className="w-full p-2 border rounded"
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="password"
-            name="newPassword"
-            placeholder="New Password"
-            className="w-full p-2 border rounded"
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="password"
-            name="repeatPassword"
-            placeholder="Repeat New Password"
-            className="w-full p-2 border rounded"
-            onChange={handleChange}
-            required
-          />
-          {passwordError && (
-            <p className="text-red-500 text-sm">{passwordError}</p>
+          {/* Editable Allergies Field */}
+          <div>
+            <label className="block font-medium">Allergies:</label>
+            <input
+              type="text"
+              name="allergies"
+              value={formData.allergies}
+              placeholder="Enter your allergies"
+              className="w-full p-2 border rounded"
+              onChange={handleChange}
+            />
+          </div>
+
+          {/* Editable Medications Field */}
+          <div>
+            <label className="block font-medium">Medications:</label>
+            <input
+              type="text"
+              name="medications"
+              value={formData.medications}
+              placeholder="Enter your medications"
+              className="w-full p-2 border rounded"
+              onChange={handleChange}
+            />
+          </div>
+
+          {/* Password fields */}
+          <div className="flex justify-between items-center">
+            <button
+              type="button"
+              onClick={toggleNewPasswordFields}
+              className="text-blue-500 hover:text-blue-700"
+            >
+              Change Password
+            </button>
+          </div>
+
+          {showNewPasswordFields && (
+            <div>
+              <input
+                type="password"
+                name="oldPassword"
+                value={formData.oldPassword}
+                placeholder="Old Password"
+                className="w-full p-2 border rounded mt-2"
+                onChange={handleChange}
+              />
+              <input
+                type="password"
+                name="newPassword"
+                value={formData.newPassword}
+                placeholder="New Password"
+                className="w-full p-2 border rounded mt-2"
+                onChange={handleChange}
+              />
+            </div>
           )}
+
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
+            className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 mt-4"
           >
             Save Profile
           </button>
+
+          {/* Delete profile button */}
+          <button
+            type="button"
+            onClick={handleDeleteProfile}
+            className="w-full bg-red-500 text-white p-2 rounded hover:bg-red-600 mt-4"
+          >
+            Delete Profile
+          </button>
         </form>
       </div>
-      {showPopup && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-4 rounded shadow-lg">
-            <h2 className="text-lg font-semibold mb-2">Success!</h2>
-            <p>Your profile information has been updated.</p>
-            <button
-              onClick={() => setShowPopup(false)}
-              className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
