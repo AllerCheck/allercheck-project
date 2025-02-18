@@ -54,7 +54,7 @@ const DailyJournal = () => {
             </div>
           </div>
 
-          {/* Medications Section at the Bottom */}
+          {/* Medications Section Below Symptoms */}
           <div className="flex justify-center w-full flex-col items-center space-y-4 mt-6">
             <div className="text-center">
               <label className="block text-lg font-semibold capitalize text-gray-700 mb-2">Medications</label>
@@ -77,7 +77,7 @@ const DailyJournal = () => {
               <label className="block text-lg font-semibold text-gray-700 mb-2">Notes</label>
               <textarea
                 className="w-full p-3 border border-gray-300 rounded-md focus:ring focus:ring-blue-300"
-                rows="3"
+                rows="2"
                 value={journal.notes}
                 onChange={(e) => handleChange("notes", e.target.value)}
                 placeholder="Additional notes..."
@@ -93,8 +93,8 @@ const DailyJournal = () => {
           </div>
         </form>
 
-        {/* Intensity Legend */}
-        <div className="mt-8 text-sm text-gray-600">
+        {/* Intensity Legend in One Line */}
+        <div className="mt-8 text-sm text-gray-600 flex space-x-4 justify-center">
           <p><span className="font-bold">0</span> = no symptoms</p>
           <p><span className="font-bold">1</span> = little</p>
           <p><span className="font-bold">2</span> = moderate</p>
