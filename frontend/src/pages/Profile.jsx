@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import NavigationButtons from "../components/NavigationButtons";
-import { getProfile, updateProfile, updateAuth, getAllergies, getMedications } from "../api/ProfileApi";
+import { getProfile, getAllergies } from "../api/ProfileApi";
 import { Navigate } from "react-router-dom";
 
 const ProfilePage = () => {

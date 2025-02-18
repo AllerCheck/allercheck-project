@@ -3,9 +3,7 @@ const API_URL = "http://localhost:5000"; // Falls das Backend online läuft, ers
 export const getProfile = async (token) => {
     const response = await fetch(`${API_URL}/profile`, {
         method: "GET",
-        headers: {
-            "Authorization": `Bearer ${token}`
-        }
+        headers: { "Authorization": `Bearer ${token}` }
     });
     return response.json();
 };
@@ -22,15 +20,36 @@ export const updateProfile = async (token, profileData) => {
     return response.json();
 };
 
-export const updateAuth = async (token, authData) => {
-    const response = await fetch(`${API_URL}/profile/update-auth`, {
+export const updateEmail = async (token, newEmail) => {
+    const response = await fetch(`${API_URL}/profile/update-email`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${token}`
         },
-        body: JSON.stringify(authData),
+        body: JSON.stringify({ email: newEmail }),
     });
+    return response.json();
+};
+
+export const updatePassword = async (token, oldPassword, newPassword) => {
+    const response = await fetch(`${API_URL}/profile/update-password`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({ oldPassword, newPassword }),
+    });
+    return response.json();
+};
+
+export const deleteProfile = async (token) => {
+    const response = await fetch(`${API_URL}/profile`, {
+        method: "DELETE",
+        headers: { "Authorization": `Bearer ${token}` }
+    });
+    if (!response.ok) throw new Error("Fehler beim Löschen des Profils");
     return response.json();
 };
 
