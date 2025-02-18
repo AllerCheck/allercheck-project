@@ -8,6 +8,7 @@ import { ProfilePage } from "./pages/Profile";
 import DailyJournal from "./pages/DailyJournal";
 import Statistics from "./pages/Statistics";
 
+
 function App() {
   return (
     <div className="flex flex-col min-h-screen bg-white-50">

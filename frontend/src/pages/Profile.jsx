@@ -78,15 +78,6 @@ const ProfilePage = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Format date for input field
-  const formatDateForInput = (isoDateString) => {
-    const date = new Date(isoDateString);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`;
-  };
-
   // Toggle new email input field
   const toggleNewEmailSheet = () => {
     setShowNewEmailSheet(!showNewEmailSheet);
@@ -139,6 +130,15 @@ const ProfilePage = () => {
     }
   };
 
+  // Format date for displaying as text
+  const formatDate = (isoDateString) => {
+    const date = new Date(isoDateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
   return (
     <div className="flex flex-col items-center py-10">
       <div className="mb-10">
@@ -153,33 +153,20 @@ const ProfilePage = () => {
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            type="text"
-            name="first_name"
-            value={formData.first_name}
-            placeholder="First Name"
-            className="w-full p-2 border rounded"
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="text"
-            name="last_name"
-            value={formData.last_name}
-            placeholder="Last Name"
-            className="w-full p-2 border rounded"
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="date"
-            name="dob"
-            value={formData.dob ? formatDateForInput(formData.dob) : ""}
-            className="w-full p-2 border rounded"
-            onChange={handleChange}
-            required
-          />
+          {/* Displaying first_name and last_name as text */}
+          <div className="text-lg">
+            <strong>First Name: </strong>{formData.first_name}
+          </div>
+          <div className="text-lg">
+            <strong>Last Name: </strong>{formData.last_name}
+          </div>
 
+          {/* Displaying dob as text */}
+          <div className="text-lg">
+            <strong>Date of Birth: </strong>{formatDate(formData.dob)}
+          </div>
+
+          {/* Editable email */}
           <div className="relative flex items-center">
             <input
               type="email"
@@ -211,33 +198,15 @@ const ProfilePage = () => {
             </div>
           )}
 
-          {/* Editable Allergies Field */}
-          <div>
-            <label className="block font-medium">Allergies:</label>
-            <input
-              type="text"
-              name="allergies"
-              value={formData.allergies}
-              placeholder="Enter your allergies"
-              className="w-full p-2 border rounded"
-              onChange={handleChange}
-            />
+          {/* Displaying allergies and medications as text */}
+          <div className="text-lg">
+            <strong>Allergies: </strong>{formData.allergies}
+          </div>
+          <div className="text-lg">
+            <strong>Medications: </strong>{formData.medications}
           </div>
 
-          {/* Editable Medications Field */}
-          <div>
-            <label className="block font-medium">Medications:</label>
-            <input
-              type="text"
-              name="medications"
-              value={formData.medications}
-              placeholder="Enter your medications"
-              className="w-full p-2 border rounded"
-              onChange={handleChange}
-            />
-          </div>
-
-          {/* Password fields */}
+          {/* Editable password fields */}
           <div className="flex justify-between items-center">
             <button
               type="button"
