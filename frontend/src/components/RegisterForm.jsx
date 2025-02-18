@@ -58,8 +58,8 @@ function RegisterForm() {
             </label>
             <input
               type="text"
-              name="firstName"
-              value={formData.firstName || ""}
+              name="first_name"
+              value={formData.first_name || ""}
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
             />
@@ -70,8 +70,8 @@ function RegisterForm() {
             </label>
             <input
               type="text"
-              name="lastName"
-              value={formData.lastName || ""}
+              name="last_name"
+              value={formData.last_name || ""}
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
             />
