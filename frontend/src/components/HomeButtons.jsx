@@ -12,7 +12,7 @@ const HomeButtons = () => {
       />
       <Button
         label="Allergy Journal"
-        onClick={() => navigate("/allergy-journal")}
+        onClick={() => navigate("/journal")}
         className="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-700 transition cursor-pointer max-w-32 inline-block"
       />
       <Button

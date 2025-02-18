@@ -5,6 +5,7 @@ import Home from "./pages/Home";
 import LoginForm from "./components/LoginForm";
 import RegisterForm from "./components/RegisterForm";
 import { ProfilePage } from "./pages/Profile";
+import DailyJournal from "./pages/DailyJournal";
 
 function App() {
   return (
@@ -16,7 +17,8 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<LoginForm />} />
           <Route path="/register" element={<RegisterForm />} />
-          <Route path="/Profile" element={<ProfilePage />} />
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/journal" element={<DailyJournal />} />
         </Routes>
       </main>
 
