@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import NavigationButtons from "../components/NavigationButtons";
+import axios from "axios";
 
 const DailyJournal = () => {
   const [journal, setJournal] = useState({
@@ -11,14 +12,50 @@ const DailyJournal = () => {
     notes: "",
   });
 
+  const [token] = useState(localStorage.getItem("token") || ""); // Assuming token is stored in localStorage
+
+  // Update state for journal entries
   const handleChange = (field, value) => {
     setJournal({ ...journal, [field]: value });
   };
 
+  // Handle form submission to save journal entry to backend
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Journal Entry:", journal);
-    alert("Entry Saved!");
+
+    // Check if there is a valid token
+    if (!token) {
+      alert("User is not authenticated.");
+      return;
+    }
+
+    // Make a POST request to the backend API to save the journal entry
+    axios
+      .post(
+        "http://localhost:5000/journal",
+        {
+          nose: journal.nose,
+          eyes: journal.eyes,
+          lungs: journal.lungs,
+          skin: journal.skin,
+          medication_taken: journal.medications,
+          notes: journal.notes,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Send the token for authentication
+          },
+        }
+      )
+      .then((response) => {
+        console.log("Entry Saved:", response.data);
+        alert("Entry Saved!");
+      })
+      .catch((error) => {
+        console.error("Error saving journal entry:", error);
+        alert("Error saving entry");
+      });
   };
 
   return (
