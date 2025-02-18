@@ -17,7 +17,7 @@ const ProfilePage = () => {
     email: "",
     newEmail: "",
     medications: "",
-    allergies: "", // Allergies will be stored as a string
+    allergies: "",
     currentPassword: "",
     newPassword: "",
     repeatPassword: "",
@@ -26,6 +26,7 @@ const ProfilePage = () => {
   const [passwordError, setPasswordError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [showPopup, setShowPopup] = useState(false);
+  const [isEditingEmail, setIsEditingEmail] = useState(false); // Track email editing state
 
   // Fetch profile data and allergies when the component mounts
   useEffect(() => {
@@ -48,7 +49,9 @@ const ProfilePage = () => {
         console.log("Allergies Data:", allergiesData);
 
         // Extract allergy names and join them into a string
-        const allergyNames = allergiesData.map((allergy) => allergy.name).join(", ");
+        const allergyNames = allergiesData
+          .map((allergy) => allergy.name)
+          .join(", ");
         setFormData((prevData) => ({
           ...prevData,
           allergies: allergyNames, // Store as a string
@@ -106,6 +109,10 @@ const ProfilePage = () => {
     return `${year}-${month}-${day}`;
   };
 
+  const toggleEmailEdit = () => {
+    setIsEditingEmail((prev) => !prev); // Toggle email edit state
+  };
+
   return (
     <div className="flex flex-col items-center py-10">
       <div className="mb-10">
@@ -142,24 +149,37 @@ const ProfilePage = () => {
             onChange={handleChange}
             required
           />
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            placeholder="Email"
-            className="w-full p-2 border rounded"
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="email"
-            name="newEmail"
-            placeholder="New Email"
-            className="w-full p-2 border rounded"
-            onChange={handleChange}
-            required
-          />
-          {emailError && <p className="text-red-500 text-sm">{emailError}</p>}
+
+          {/* Current Email */}
+          <div className="relative w-full">
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              className="w-full p-2 border rounded"
+              disabled
+            />
+            <span
+              className="absolute right-3 top-3 text-blue-500 cursor-pointer"
+              onClick={toggleEmailEdit} // Toggle email edit on click
+            >
+              ✏️
+            </span>
+          </div>
+
+          {/* New Email - Displayed under the current email when editing */}
+          {isEditingEmail && (
+            <input
+              type="email"
+              name="newEmail"
+              value={formData.newEmail}
+              placeholder="New Email"
+              className="w-full p-2 border rounded mt-2"
+              onChange={handleChange}
+              required
+            />
+          )}
+
           <input
             type="text"
             name="medications"
@@ -209,12 +229,6 @@ const ProfilePage = () => {
             className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
           >
             Save Profile
-          </button>
-          <button
-            type="submit"
-            className="w-full bg-red-500 text-white p-2 rounded hover:bg-red-600"
-          >
-            Delete Profile
           </button>
         </form>
       </div>
