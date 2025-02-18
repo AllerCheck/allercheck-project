@@ -7,6 +7,7 @@ import RegisterForm from "./components/RegisterForm";
 import { ProfilePage } from "./pages/Profile";
 import DailyJournal from "./pages/DailyJournal";
 
+
 function App() {
   return (
     <div className="flex flex-col min-h-screen bg-white-50">
