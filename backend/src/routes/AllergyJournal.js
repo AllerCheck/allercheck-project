@@ -63,7 +63,7 @@ router.post("/", async (req, res) => {
         console.error("🔥 Fehler beim Speichern des Journal-Eintrags:", error);
         res.status(500).json({ message: "Fehler beim Speichern des Journal-Eintrags", error: error.message });
     }
-
+    const { notes } = req.body || {}; // Ensure notes is defined
     if (notes && notes.length > 500) {
         return res.status(400).json({ message: "Notiz darf maximal 500 Zeichen enthalten" });
     }

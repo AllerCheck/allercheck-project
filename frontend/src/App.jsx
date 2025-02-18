@@ -6,6 +6,7 @@ import LoginForm from "./components/LoginForm";
 import RegisterForm from "./components/RegisterForm";
 import { ProfilePage } from "./pages/Profile";
 import DailyJournal from "./pages/DailyJournal";
+import Statistics from "./pages/Statistics";
 
 function App() {
   return (
@@ -19,6 +20,8 @@ function App() {
           <Route path="/register" element={<RegisterForm />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/journal" element={<DailyJournal />} />
+          <Route path="/statistics" element={<Statistics />} />
+          
         </Routes>
       </main>
 
