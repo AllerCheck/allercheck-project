@@ -7,29 +7,47 @@ import fs from "fs";
 
 const router = express.Router();
 
-// 🟠 Statistik abrufen
-router.get("/journal/stats", async (req, res) => {
+
+// 🟢 GET: Statistik für einen User & Zeitraum abrufen
+router.get("/", async (req, res) => {
+    const { user_id, start_date, end_date } = req.query;
+
+    if (!user_id || !start_date || !end_date) {
+        return res.status(400).json({ message: "User-ID, Start- und Enddatum erforderlich" });
+    }
+
     try {
-        const authHeader = req.headers["authorization"];
-        if (!authHeader) {
-            return res.status(401).json({ message: "Kein Token vorhanden" });
-        }
-
-        const token = authHeader.split(" ")[1];
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-        const { startDate, endDate } = req.query;
-
         const conn = await pool.getConnection();
-        const stats = await conn.query(
-            "SELECT entry_date, nose, lungs, skin, eyes, medication_taken FROM allergy_journal WHERE user_id = ? AND entry_date BETWEEN ? AND ?",
-            [decoded.id, startDate, endDate]
+
+        const result = await conn.query(
+            `SELECT COUNT(*) as total_entries, 
+                    IFNULL(AVG(nose), 0) as avg_nose, 
+                    IFNULL(AVG(lungs), 0) as avg_lungs, 
+                    IFNULL(AVG(skin), 0) as avg_skin, 
+                    IFNULL(AVG(eyes), 0) as avg_eyes, 
+                    IFNULL(SUM(medication_taken), 0) as total_medications
+             FROM allergy_journal 
+             WHERE user_id = ? AND entry_date BETWEEN ? AND ?`,
+            [user_id, start_date, end_date]
         );
+
         conn.release();
 
-        res.json(stats);
+        // 🔥 Lösung für `BigInt` Problem: Alle Werte in `Number` konvertieren
+        const formattedResult = {
+            total_entries: Number(result[0].total_entries),
+            avg_nose: Number(result[0].avg_nose),
+            avg_lungs: Number(result[0].avg_lungs),
+            avg_skin: Number(result[0].avg_skin),
+            avg_eyes: Number(result[0].avg_eyes),
+            total_medications: Number(result[0].total_medications),
+        };
+
+        res.json(formattedResult);
+
     } catch (error) {
-        res.status(500).json({ message: "Fehler beim Abrufen der Statistik", error: error.message });
+        console.error("🔥 Fehler beim Abrufen der Statistik:", error);
+        res.status(500).json({ message: "Fehler bei der Statistik-Abfrage", error: error.message });
     }
 });
 
