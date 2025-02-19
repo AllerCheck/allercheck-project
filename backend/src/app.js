@@ -8,6 +8,7 @@ import appointmentRoutes from "./routes/appointments.js";
 import allergyJournalRoutes from "./routes/AllergyJournal.js";
 import statisticsRoutes from "./routes/Statistics.js"; // 🟢 Neue Statistik-Route importieren
 import googleMapsRoutes from "./routes/GoogleMaps.js";
+import journalRoutes from "./routes/journal.js"; 
 
 dotenv.config();
 
@@ -18,7 +19,8 @@ app.use(cors());
 app.use("/appointments", appointmentRoutes);
 app.use("/journal", allergyJournalRoutes); 
 app.use("/google-maps", googleMapsRoutes);// 📌 Für URL-encoded Daten
-app.use("/statistics", statisticsRoutes); // 🟢 Statistik-Route hinzufügen
+app.use("/statistics", statisticsRoutes);
+app.use("/journal", journalRoutes); // 🟢 Statistik-Route hinzufügen
 
 // API-Routen registrieren
 app.use("/profile", profileRoutes);
