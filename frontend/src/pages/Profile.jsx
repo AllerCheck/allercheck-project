@@ -10,6 +10,7 @@ import {
 } from "../api/ProfileApi";
 import { Navigate } from "react-router-dom";
 import NavigationButtons from "../components/NavigationButtons";
+import useAuthStore from "../store/useAuthStore";
 
 const ProfilePage = () => {
   const token = localStorage.getItem("token");
@@ -121,9 +122,21 @@ const ProfilePage = () => {
   // Handle profile deletion
   const handleDeleteProfile = async () => {
     try {
-      await deleteProfile(token);
-      localStorage.removeItem("token"); // Remove token upon deletion
-      Navigate("/login"); // Redirect to login after profile deletion
+      const response = await fetch("http://localhost:5000/api/profile/delete", {
+        method: "DELETE",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to delete profile");
+      }
+
+      localStorage.removeItem("token");
+      alert("Profile deleted successfully");
+      useNavigate("/login"); // ✅ Correct redirection
     } catch (error) {
       console.error("Error deleting profile:", error);
       setError("Failed to delete profile.");

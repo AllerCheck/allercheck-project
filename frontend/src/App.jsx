@@ -7,6 +7,7 @@ import RegisterForm from "./components/RegisterForm";
 import { ProfilePage } from "./pages/Profile";
 import DailyJournal from "./pages/DailyJournal";
 import Statistics from "./pages/Statistics";
+import Find from "./pages/Find";
 
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/journal" element={<DailyJournal />} />
           <Route path="/statistics" element={<Statistics />} />
+          <Route path="/find" element={<Find />} />
           
         </Routes>
       </main>

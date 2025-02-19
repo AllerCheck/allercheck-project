@@ -1,42 +1,16 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import useAuthStore from "../store/useAuthStore";
 
 const Header = () => {
   const navigate = useNavigate();
-  const [token, setToken] = useState(localStorage.getItem("token"));
-  const [username, setUsername] = useState(localStorage.getItem("username"));
-
-  useEffect(() => {
-    const handleStorageChange = () => {
-      setToken(localStorage.getItem("token"));
-      setUsername(localStorage.getItem("username"));
-    };
-
-    window.addEventListener("storage", handleStorageChange);
-
-    return () => {
-      window.removeEventListener("storage", handleStorageChange);
-    };
-  }, []);
-
-  useEffect(() => {
-    setToken(localStorage.getItem("token"));
-    setUsername(localStorage.getItem("username"));
-  }, []);
+  const { token, first_name, logout } = useAuthStore(); // Use first_name instead of username
 
   const handleLoginClick = () => {
-    if (token) {
-      navigate("/profile");
-    } else {
-      navigate("/login");
-    }
+    navigate(token ? "/profile" : "/login");
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("username");
-    setToken(null);
-    setUsername(null);
+    logout();
     navigate("/login");
   };
 
@@ -51,26 +25,24 @@ const Header = () => {
           className="cursor-pointer flex items-center gap-2"
         >
           {token ? (
-            username || "User"
+            first_name || "User" // Show first_name if available
           ) : (
-            <>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="lucide lucide-log-in"
-              >
-                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
-                <polyline points="10 17 15 12 10 7" />
-                <line x1="15" x2="3" y1="12" y2="12" />
-              </svg>
-            </>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="lucide lucide-log-in"
+            >
+              <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+              <polyline points="10 17 15 12 10 7" />
+              <line x1="15" x2="3" y1="12" y2="12" />
+            </svg>
           )}
         </span>
         {token && (
