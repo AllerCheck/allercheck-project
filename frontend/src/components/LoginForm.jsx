@@ -1,14 +1,17 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import useAuthStore from "../store/useAuthStore";
+import { Link } from "react-router-dom";
 
 function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const setAuth = useAuthStore((state) => state.setToken); 
+  const setFirstName = useAuthStore((state) => state.setFirstName);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const response = await fetch("http://localhost:5000/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -18,24 +21,38 @@ function LoginForm() {
     const data = await response.json();
 
     if (response.ok) {
-      // Save the token to localStorage (or sessionStorage)
-      localStorage.setItem("token", data.token);
+      setAuth(data.token); // Save the token in the store
 
-      // Redirect to Home page
-      navigate("/"); // Redirect to Home after successful login
+      // Fetch the profile data after login
+      const profileResponse = await fetch("http://localhost:5000/profile", {
+        method: "GET",
+        headers: {
+          "Authorization": `Bearer ${data.token}`,
+        },
+      });
+
+      const profileData = await profileResponse.json();
+
+      if (profileResponse.ok) {
+        // Store the first_name from the profile data
+        setFirstName(profileData.first_name);
+      } else {
+        console.error("Profile fetch error:", profileData.message);
+      }
+
+      navigate("/");  // Redirect to home or dashboard
     } else {
-      alert(data.message); // Display error message from backend
+      alert(data.message);
     }
   };
 
   return (
-    <div className="flex flex-col justify-center items-center  p-4">
+    <div className="flex flex-col justify-center items-center p-4">
       <form
         onSubmit={handleSubmit}
         className="bg-white p-6 rounded-lg shadow-md w-80"
       >
         <h2 className="text-2xl font-semibold text-center mb-4">Login</h2>
-
         <label
           htmlFor="email"
           className="block text-sm font-medium text-gray-700"
@@ -49,7 +66,6 @@ function LoginForm() {
           onChange={(e) => setEmail(e.target.value)}
           className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 mb-3"
         />
-
         <label
           htmlFor="password"
           className="block text-sm font-medium text-gray-700"
@@ -63,7 +79,6 @@ function LoginForm() {
           onChange={(e) => setPassword(e.target.value)}
           className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 mb-4"
         />
-
         <button
           type="submit"
           className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition duration-200"
@@ -78,7 +93,6 @@ function LoginForm() {
           </Link>
         </p>
       </form>
-
       <div className="mt-20 bg-white p-6 rounded-lg shadow-md text-gray-700 text-sm w-auto justify-center">
         <h3 className="text-lg font-semibold text-center mb-3">
           Why Register for Allercheck?
