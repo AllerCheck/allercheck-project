@@ -14,7 +14,31 @@ const Statistics = () => {
             return;
         }
         const data = await fetchStatistics(token, startDate, endDate);
-        setStatistics(data);
+        if (data) {
+            // Calculate the statistics from the data
+            const totalEntries = data.length;
+            const avgSymptoms = {
+                nose: calculateAverage(data, "nose"),
+                lungs: calculateAverage(data, "lungs"),
+                skin: calculateAverage(data, "skin"),
+                eyes: calculateAverage(data, "eyes"),
+            };
+            const totalMedications = data.filter(entry => entry.medication_taken === 1).length;
+
+            setStatistics({
+                total_entries: totalEntries,
+                avg_nose: avgSymptoms.nose,
+                avg_lungs: avgSymptoms.lungs,
+                avg_skin: avgSymptoms.skin,
+                avg_eyes: avgSymptoms.eyes,
+                total_medications: totalMedications,
+            });
+        }
+    };
+
+    const calculateAverage = (data, field) => {
+        const total = data.reduce((sum, entry) => sum + parseInt(entry[field]), 0);
+        return total / data.length;
     };
 
     return (
