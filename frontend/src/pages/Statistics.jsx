@@ -15,7 +15,6 @@ const Statistics = () => {
         }
         const data = await fetchStatistics(token, startDate, endDate);
         if (data) {
-            // Calculate the statistics from the data
             const totalEntries = data.length;
             const avgSymptoms = {
                 nose: calculateAverage(data, "nose"),
@@ -37,8 +36,9 @@ const Statistics = () => {
     };
 
     const calculateAverage = (data, field) => {
-        const total = data.reduce((sum, entry) => sum + parseInt(entry[field]), 0);
-        return total / data.length;
+        if (data.length === 0) return 0;
+        const total = data.reduce((sum, entry) => sum + parseInt(entry[field] || 0), 0);
+        return (total / data.length).toFixed(2);
     };
 
     return (

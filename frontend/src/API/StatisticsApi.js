@@ -1,19 +1,19 @@
-const API_URL = "http://localhost:5000/journal/stats"; // Ensure this matches the backend route
+const API_URL = "http://localhost:5000/journal";
 
 export const fetchStatistics = async (token, startDate, endDate) => {
     try {
-        // Update the URL to use the correct backend endpoint
-        const response = await fetch(`${API_URL}?start=${startDate}&end=${endDate}`, {
+        const userId = localStorage.getItem("user_id"); 
+        const response = await fetch(`${API_URL}?user_id=${userId}&start_date=${startDate}&end_date=${endDate}`, {
             method: "GET",
             headers: { "Authorization": `Bearer ${token}` }
         });
 
         if (!response.ok) {
-            const errorData = await response.json(); // Handle detailed error response from the backend
+            const errorData = await response.json();
             throw new Error(errorData.message || "Fehler beim Abrufen der Statistik");
         }
 
-        return await response.json(); // Return the response data (an array of journal entries)
+        return await response.json();
     } catch (error) {
         console.error("Fehler beim Abrufen der Statistik:", error);
         return null;
@@ -22,13 +22,14 @@ export const fetchStatistics = async (token, startDate, endDate) => {
 
 export const exportStatistics = async (token, format, startDate, endDate) => {
     try {
-        const response = await fetch(`${API_URL}/export?format=${format}&start=${startDate}&end=${endDate}`, {
+        const userId = localStorage.getItem("user_id");
+        const response = await fetch(`${API_URL}/export/${format}?user_id=${userId}&start_date=${startDate}&end_date=${endDate}`, {
             method: "GET",
             headers: { "Authorization": `Bearer ${token}` }
         });
 
         if (!response.ok) {
-            const errorData = await response.json(); // Handle detailed error response from the backend
+            const errorData = await response.json();
             throw new Error(errorData.message || "Fehler beim Export");
         }
 
