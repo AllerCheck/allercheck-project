@@ -1,22 +1,24 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   getProfile,
-  getAllergies,
-  getMedications,
   updateProfile,
   updateEmail,
   updatePassword,
   deleteProfile,
+  getAllergies,
+  getMedications,
 } from "../api/ProfileApi";
-import { Navigate } from "react-router-dom";
 import NavigationButtons from "../components/NavigationButtons";
 import useAuthStore from "../store/useAuthStore";
 
 const ProfilePage = () => {
   const token = localStorage.getItem("token");
+  const navigate = useNavigate();
+
   if (!token) {
     console.log("No token found, redirecting to login");
-    Navigate("/login");
+    navigate("/login");
   }
 
   const [formData, setFormData] = useState({
@@ -48,22 +50,19 @@ const ProfilePage = () => {
           email: profileData.email,
         }));
 
-        const allergiesData = await getAllergies();
+        const allergiesData = await getAllergies(token);
+        const medicationsData = await getMedications(token);
+
         setFormData((prevData) => ({
           ...prevData,
           allergies:
             allergiesData.length > 0
               ? allergiesData.map((allergy) => allergy.name).join(", ")
-              : "Not listed", // Check if allergies are listed
-        }));
-
-        const medicationsData = await getMedications();
-        setFormData((prevData) => ({
-          ...prevData,
+              : "Not listed", // Default if no allergies
           medications:
             medicationsData.length > 0
               ? medicationsData.map((med) => med.name).join(", ")
-              : "Not listed", // Check if medications are listed
+              : "Not listed", // Default if no medications
         }));
       } catch (error) {
         console.error("Error fetching profile data:", error);
@@ -125,7 +124,7 @@ const ProfilePage = () => {
       const response = await fetch("http://localhost:5000/api/profile/delete", {
         method: "DELETE",
         headers: {
-          "Authorization": `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
       });
@@ -136,7 +135,7 @@ const ProfilePage = () => {
 
       localStorage.removeItem("token");
       alert("Profile deleted successfully");
-      useNavigate("/login"); // ✅ Correct redirection
+      navigate("/login"); // ✅ Correct redirection
     } catch (error) {
       console.error("Error deleting profile:", error);
       setError("Failed to delete profile.");
@@ -168,15 +167,18 @@ const ProfilePage = () => {
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Displaying first_name and last_name as text */}
           <div className="text-lg">
-            <strong>First Name: </strong>{formData.first_name}
+            <strong>First Name: </strong>
+            {formData.first_name}
           </div>
           <div className="text-lg">
-            <strong>Last Name: </strong>{formData.last_name}
+            <strong>Last Name: </strong>
+            {formData.last_name}
           </div>
 
           {/* Displaying dob as text */}
           <div className="text-lg">
-            <strong>Date of Birth: </strong>{formatDate(formData.dob)}
+            <strong>Date of Birth: </strong>
+            {formatDate(formData.dob)}
           </div>
 
           {/* Editable email */}
@@ -213,10 +215,12 @@ const ProfilePage = () => {
 
           {/* Displaying allergies and medications as text */}
           <div className="text-lg">
-            <strong>Allergies: </strong>{formData.allergies}
+            <strong>Allergies: </strong>
+            {formData.allergies}
           </div>
           <div className="text-lg">
-            <strong>Medications: </strong>{formData.medications}
+            <strong>Medications: </strong>
+            {formData.medications}
           </div>
 
           {/* Editable password fields */}
