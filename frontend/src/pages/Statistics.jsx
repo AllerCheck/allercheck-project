@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
-import { fetchStatistics, exportStatistics } from "../api/StatisticsApi";
+import { fetchStatistics } from "../api/StatisticsApi";
 import NavigationButtons from "../components/NavigationButtons";
+import Papa from "papaparse";  // For CSV export
+import { jsPDF } from "jspdf";    // For PDF export
+import "jspdf-autotable";  // Import autoTable plugin
 
 const Statistics = () => {
     const [startDate, setStartDate] = useState("");
@@ -10,11 +13,10 @@ const Statistics = () => {
     const [noEntriesMessage, setNoEntriesMessage] = useState("");
     const token = localStorage.getItem("token");
 
-    // Set default dates on initial load
     useEffect(() => {
         const today = new Date();
-        const defaultStartDate = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().split('T')[0]; // First day of the current month
-        const defaultEndDate = today.toISOString().split('T')[0]; // Today's date
+        const defaultStartDate = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().split('T')[0];
+        const defaultEndDate = today.toISOString().split('T')[0];
         setStartDate(defaultStartDate);
         setEndDate(defaultEndDate);
     }, []);
@@ -32,13 +34,12 @@ const Statistics = () => {
                 const start = new Date(startDate);
                 const end = new Date(endDate);
 
-                // Normalize all dates to ensure only date part is considered
                 entryDate.setHours(0, 0, 0, 0);
                 start.setHours(0, 0, 0, 0);
-                end.setHours(23, 59, 59, 999); // Include the full end date
+                end.setHours(23, 59, 59, 999);
 
                 return entryDate >= start && entryDate <= end;
-            });
+            }).sort((a, b) => new Date(b.entry_date) - new Date(a.entry_date));
 
             setEntries(filteredEntries);
 
@@ -68,12 +69,81 @@ const Statistics = () => {
     };
 
     const calculateAverage = (data, field) => {
+        if (data.length === 0) return 0;
         const total = data.reduce((sum, entry) => sum + parseInt(entry[field]), 0);
         return total / data.length;
     };
 
     const handleExport = (format) => {
-        exportStatistics(token, format, startDate, endDate);
+        if (format === "csv") {
+            // Extract the table data to export as CSV
+            const csvData = entries.map(entry => ({
+                Date: new Date(entry.entry_date).toLocaleDateString(),
+                Nose: entry.nose,
+                Lungs: entry.lungs,
+                Skin: entry.skin,
+                Eyes: entry.eyes,
+                Medications: entry.medication_taken === 1 ? "Yes" : "No",
+                Notes: entry.notes || "",
+            }));
+
+            const csv = Papa.unparse(csvData);
+            const blob = new Blob([csv], { type: "text/csv" });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = `statistics_${startDate}_to_${endDate}.csv`;
+            link.click();
+        } else if (format === "pdf") {
+            // Generate PDF with table and summary data
+            const doc = new jsPDF();
+            let yOffset = 10;
+
+            // Title
+            doc.setFontSize(16);
+            doc.text("Allergy Statistics", 10, yOffset);
+            yOffset += 10;
+
+            // Table Header
+            const tableColumns = ["Date", "Nose", "Lungs", "Skin", "Eyes", "Medications", "Notes"];
+            const tableData = entries.map(entry => [
+                new Date(entry.entry_date).toLocaleDateString(),
+                entry.nose,
+                entry.lungs,
+                entry.skin,
+                entry.eyes,
+                entry.medication_taken === 1 ? "Yes" : "No",
+                entry.notes || "",
+            ]);
+
+            doc.autoTable({
+                head: [tableColumns],
+                body: tableData,
+                startY: yOffset,
+                margin: { top: 10 },
+                theme: "grid",
+            });
+
+            yOffset = doc.lastAutoTable.finalY + 10;
+
+            // Summary
+            doc.setFontSize(12);
+            doc.text(`Total Entries: ${statistics.total_entries}`, 10, yOffset);
+            yOffset += 6;
+            doc.text(`Average of Symptoms:`, 10, yOffset);
+            yOffset += 6;
+            doc.text(`Nose: ${statistics.avg_nose}`, 10, yOffset);
+            yOffset += 6;
+            doc.text(`Lungs: ${statistics.avg_lungs}`, 10, yOffset);
+            yOffset += 6;
+            doc.text(`Skin: ${statistics.avg_skin}`, 10, yOffset);
+            yOffset += 6;
+            doc.text(`Eyes: ${statistics.avg_eyes}`, 10, yOffset);
+            yOffset += 6;
+            doc.text(`Medications taken: ${statistics.total_medications}`, 10, yOffset);
+
+            // Save the PDF
+            doc.save(`statistics_${startDate}_to_${endDate}.pdf`);
+        }
     };
 
     return (
@@ -81,31 +151,12 @@ const Statistics = () => {
             <NavigationButtons />
             <h2 className="text-2xl font-semibold text-center mb-4">Records</h2>
             <div className="flex space-x-2">
-                <input 
-                    type="date" 
-                    value={startDate} 
-                    onChange={(e) => setStartDate(e.target.value)} 
-                    className="border p-2 rounded" 
-                />
-                <input 
-                    type="date" 
-                    value={endDate} 
-                    onChange={(e) => setEndDate(e.target.value)} 
-                    className="border p-2 rounded" 
-                />
-                <button 
-                    onClick={handleFetchStatistics} 
-                    className="bg-blue-500 text-white px-4 py-2 rounded"
-                >
-                    Enter
-                </button>
+                <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} className="border p-2 rounded" />
+                <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} className="border p-2 rounded" />
+                <button onClick={handleFetchStatistics} className="bg-blue-500 text-white px-4 py-2 rounded">Enter</button>
             </div>
 
-            {noEntriesMessage && (
-                <div className="mt-4 text-red-600 text-center">
-                    {noEntriesMessage}
-                </div>
-            )}
+            {noEntriesMessage && <div className="mt-4 text-red-600 text-center">{noEntriesMessage}</div>}
 
             {entries.length > 0 && (
                 <div className="mt-4 p-6 border rounded shadow-lg w-full max-w-4xl">
@@ -151,18 +202,8 @@ const Statistics = () => {
                         </ul>
                         <p><strong>Medications taken:</strong> {statistics.total_medications}</p>
                         <div className="flex space-x-2 mt-4 justify-center">
-                            <button 
-                                onClick={() => handleExport("csv")} 
-                                className="bg-green-500 text-white px-4 py-2 rounded"
-                            >
-                                Export als CSV
-                            </button>
-                            <button 
-                                onClick={() => handleExport("pdf")} 
-                                className="bg-red-500 text-white px-4 py-2 rounded"
-                            >
-                                Export als PDF
-                            </button>
+                            <button onClick={() => handleExport("csv")} className="bg-green-500  hover:bg-green-700 text-white px-4 py-2 rounded cursor-pointer">Export CSV</button>
+                            <button onClick={() => handleExport("pdf")} className="bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded cursor-pointer">Export PDF</button>
                         </div>
                     </div>
                 </div>
