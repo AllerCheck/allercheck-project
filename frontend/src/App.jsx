@@ -7,7 +7,7 @@ import RegisterForm from "./components/RegisterForm";
 import { ProfilePage } from "./pages/Profile";
 import DailyJournal from "./pages/DailyJournal";
 import Statistics from "./pages/Statistics";
-import Find from "./pages/Find";
+import FindDoctor from "./pages/Find";
 import AppointmentPage from "./pages/appointments";
 
 function App() {
@@ -24,7 +24,7 @@ function App() {
           <Route path="/journal" element={<DailyJournal />} />
           <Route path="/statistics" element={<Statistics />} />
           <Route path="/appointments" element={<AppointmentPage />} />
-          <Route path="/find" element={<Find />} />
+          <Route path="/find" element={<FindDoctor />} />
         </Routes>
       </main>
 
