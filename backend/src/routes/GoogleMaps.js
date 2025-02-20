@@ -6,12 +6,16 @@ dotenv.config();
 const router = express.Router();
 const GOOGLE_MAPS_API_KEY = process.env.GOOGLE_MAPS_API_KEY;
 
+if (!GOOGLE_MAPS_API_KEY) {
+    console.error("Google Maps API key is missing in backend .env");
+}
+
 // 🟢 Suche nach Allergie-Ärzten (Google Places API)
 router.get("/places", async (req, res) => {
     const { lat, lng } = req.query;
     if (!lat || !lng) return res.status(400).json({ message: "Standort fehlt" });
 
-    const radius = 10000; // Suchradius auf 10 km erweitert
+    const radius = 10000; // 10 km search radius
     const type = "doctor";
     const keyword = "allergy specialist";
     const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lng}&radius=${radius}&type=${type}&keyword=${keyword}&key=${GOOGLE_MAPS_API_KEY}`;
