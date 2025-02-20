@@ -94,7 +94,7 @@ function Home() {
       <div className="flex justify-center gap-x-6 p-4 min-h-96 ml-2 mr-2">
         {/* Articles section */}
         <div className="bg-teal-50 p-6 text-xl font-bold rounded-2xl w-3/4 md:w-2/3">
-          <h2 className="text-xl mb-4">Latest News About Allergy</h2>
+          <h2 className="text-xl mb-4">Allergy related news</h2>
           {loadingArticles ? (
             <p>Loading articles...</p>
           ) : articlesError ? (
