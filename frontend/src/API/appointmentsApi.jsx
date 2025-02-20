@@ -1,26 +1,22 @@
 const API_URL = "http://localhost:5000/appointments";
 
-// 🟢 Alle Termine abrufen
+// 🟢 Fetch all appointments
 export const getAppointments = async (token) => {
   try {
     const response = await fetch(API_URL, {
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },
     });
-    if (!response.ok) {
-      const errorData = await response.json();
-      console.error("API Error:", errorData);
-      throw new Error("Fehler beim Abrufen der Termine");
-    }
-
+    if (!response.ok)
+      throw new Error(`Failed to fetch appointments: ${response.statusText}`);
     return await response.json();
   } catch (error) {
-    console.error("Fehler beim Abrufen der Termine:", error);
-    throw error;
+    console.error("Error fetching appointments:", error);
+    throw new Error("Error fetching appointments. Please try again later.");
   }
 };
 
-// 🟢 Neuen Termin hinzufügen
+// 🟢 Add a new appointment
 export const addAppointment = async (token, appointmentData) => {
   try {
     const response = await fetch(API_URL, {
@@ -31,22 +27,16 @@ export const addAppointment = async (token, appointmentData) => {
       },
       body: JSON.stringify(appointmentData),
     });
-
-    if (!response.ok) {
-      // Log the response body to help with debugging
-      const errorData = await response.json();
-      console.error("API error response:", errorData);
-      throw new Error("Fehler beim Hinzufügen des Termins");
-    }
-
+    if (!response.ok)
+      throw new Error(`Failed to add appointment: ${response.statusText}`);
     return await response.json();
   } catch (error) {
-    console.error("Fehler beim Hinzufügen des Termins:", error);
-    throw error;
+    console.error("Error adding appointment:", error);
+    throw new Error("Error adding appointment. Please try again later.");
   }
 };
 
-// 🟠 Termin aktualisieren
+// 🟠 Update an existing appointment
 export const updateAppointment = async (token, id, appointmentData) => {
   try {
     const response = await fetch(`${API_URL}/${id}`, {
@@ -57,25 +47,27 @@ export const updateAppointment = async (token, id, appointmentData) => {
       },
       body: JSON.stringify(appointmentData),
     });
-    if (!response.ok) throw new Error("Fehler beim Aktualisieren des Termins");
+    if (!response.ok)
+      throw new Error(`Failed to update appointment: ${response.statusText}`);
     return await response.json();
   } catch (error) {
-    console.error("Fehler beim Aktualisieren des Termins:", error);
-    throw error;
+    console.error("Error updating appointment:", error);
+    throw new Error("Error updating appointment. Please try again later.");
   }
 };
 
-// 🔴 Termin löschen
+// 🔴 Delete an appointment
 export const deleteAppointment = async (token, id) => {
   try {
     const response = await fetch(`${API_URL}/${id}`, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${token}` },
     });
-    if (!response.ok) throw new Error("Fehler beim Löschen des Termins");
+    if (!response.ok)
+      throw new Error(`Failed to delete appointment: ${response.statusText}`);
     return await response.json();
   } catch (error) {
-    console.error("Fehler beim Löschen des Termins:", error);
-    throw error;
+    console.error("Error deleting appointment:", error);
+    throw new Error("Error deleting appointment. Please try again later.");
   }
 };
