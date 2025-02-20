@@ -9,6 +9,7 @@ import allergyJournalRoutes from "./routes/AllergyJournal.js";
 import statisticsRoutes from "./routes/Statistics.js"; // 🟢 Neue Statistik-Route importieren
 import googleMapsRoutes from "./routes/GoogleMaps.js";
 import journalRoutes from "./routes/journal.js"; 
+import pollenRoutes from "./routes/pollen.js";
 
 dotenv.config();
 
@@ -21,6 +22,7 @@ app.use("/journal", allergyJournalRoutes);
 app.use("/google-maps", googleMapsRoutes);// 📌 Für URL-encoded Daten
 app.use("/statistics", statisticsRoutes);
 app.use("/journal", journalRoutes); // 🟢 Statistik-Route hinzufügen
+app.use("/pollen", pollenRoutes);
 
 // API-Routen registrieren
 app.use("/profile", profileRoutes);
