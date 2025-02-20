@@ -32,14 +32,32 @@ function Home() {
   useEffect(() => {
     const getPollenData = async () => {
       try {
-        const data = await fetchPollenData(location);
-        setPollenData(data);
-        setPollenError(null);  // Reset error state if data is fetched
+        const response = await fetchPollenData(location);
+        console.log("location", location);
+        
+        // Log response status
+        console.log("Response status:", response.status);
+    
+        // Get the response body as text
+        const text = await response.text();
+        console.log("Response body:", text);
+    
+        // If the response is OK, try to parse it
+        if (response.ok) {
+          const data = JSON.parse(text);
+          setPollenData(data);
+          setPollenError(null); // Reset error state
+        } else {
+          throw new Error(`Error fetching pollen data: ${response.statusText}`);
+        }
       } catch (error) {
-        setPollenError("Error fetching pollen data. Please try again later.");
         console.error("Error fetching pollen data:", error);
+        setPollenError("Error fetching pollen data. Please try again later.");
       }
     };
+    
+    
+    
 
     getPollenData();
   }, [location]);
