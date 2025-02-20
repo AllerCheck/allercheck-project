@@ -4,7 +4,7 @@ import Button from "./Button";
 const HomeButtons = () => {
   const navigate = useNavigate();
   return (
-    <div className="flex justify-center space-x-8 mt-6">
+    <div className="flex justify-center space-x-20 mt-6">
       <Button
         label="Barcode Scanner"
         onClick={() => navigate("/barcode-scanner")}
