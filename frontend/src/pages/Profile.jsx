@@ -10,7 +10,6 @@ import {
   getMedications,
 } from "../api/ProfileApi";
 import NavigationButtons from "../components/NavigationButtons";
-import useAuthStore from "../store/useAuthStore";
 
 const ProfilePage = () => {
   const token = localStorage.getItem("token");
