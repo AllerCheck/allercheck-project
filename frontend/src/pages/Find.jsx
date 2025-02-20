@@ -80,13 +80,15 @@ const FindDoctor = () => {
     return (
         <div className="flex flex-col items-center py-10">
             <NavigationButtons />
-            <h2 className="text-2xl font-semibold text-center mb-4">Allergie Ärzte in Ihrer Nähe</h2>
+            <h2 className="text-2xl font-semibold text-center mb-4">Allergy Doctors nearby</h2>
             <div id="map" style={{ width: "100%", height: "500px" }}></div>
             <ul className="mt-4">
                 {doctors.map((doctor, index) => (
                     <li key={index} className="border p-2 m-2">
                         <strong>{doctor.name}</strong>
                         <p>{doctor.vicinity}</p>
+                        <p>Opening Hours: {doctor.opening_hours ? "Geöffnet" : "Geschlossen"}</p>
+                        <p>Rating: {doctor.rating} / 5</p>
                         <a href={`https://www.google.com/maps/dir/?api=1&destination=${doctor.geometry.location.lat},${doctor.geometry.location.lng}`} target="_blank" rel="noopener noreferrer">Route anzeigen</a>
                     </li>
                 ))}
