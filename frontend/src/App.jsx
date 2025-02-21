@@ -8,7 +8,7 @@ import { ProfilePage } from "./pages/Profile";
 import DailyJournal from "./pages/DailyJournal";
 import Statistics from "./pages/Statistics";
 import FindDoctor from "./pages/Find";
-import AppointmentPage from "./pages/appointments";
+import Appointments from "./pages/appointments";
 
 function App() {
   return (
@@ -23,7 +23,7 @@ function App() {
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/journal" element={<DailyJournal />} />
           <Route path="/statistics" element={<Statistics />} />
-          <Route path="/appointments" element={<AppointmentPage />} />
+          <Route path="/appointments" element={<Appointments />} />
           <Route path="/find" element={<FindDoctor />} />
         </Routes>
       </main>
