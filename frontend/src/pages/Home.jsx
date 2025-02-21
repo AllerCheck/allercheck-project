@@ -128,7 +128,7 @@ function Home() {
               {/* <p><strong>Region Code:</strong> {pollenData.regionCode}</p> */}
 
               {currentPollenData.map((day, index) => (
-                <div key={index} className="mt-4 p-4 bg-white rounded-lg text-black">
+                <div key={index} className="mt-4 p-4 rounded-lg text-black">
                   <p><strong>Date:</strong> {day.date?.day}/{day.date?.month}/{day.date?.year}</p>
 
                   {/* Pollen Type Info */}
@@ -175,7 +175,7 @@ function Home() {
                           </>
                         )}
                         {plant.plantDescription && (
-                          <div className="mt-2 p-2 bg-gray-100 rounded-lg">
+                          <div className="mt-2 p-2 rounded-lg">
                             <p><strong>Type:</strong> {plant.plantDescription.type}</p>
                             <p><strong>Family:</strong> {plant.plantDescription.family}</p>
                             <p><strong>Season:</strong> {plant.plantDescription.season}</p>
