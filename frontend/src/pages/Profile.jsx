@@ -15,11 +15,6 @@ const ProfilePage = () => {
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
 
-  if (!token) {
-    console.log("No token found, redirecting to login");
-    navigate("/login");
-  }
-
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",

@@ -16,14 +16,6 @@ const DailyJournal = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
-  // Redirect to login if user is not authenticated
-  useEffect(() => {
-    if (!token) {
-      console.log("User not authenticated, redirecting to login...");
-      navigate("/login");
-    }
-  }, [token, navigate]); // Runs only when component mounts
-
   // Update state for journal entries
   const handleChange = (field, value) => {
     setJournal({ ...journal, [field]: value });
