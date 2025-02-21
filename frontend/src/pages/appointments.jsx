@@ -122,13 +122,19 @@ const Appointments = () => {
           className="border px-2 py-1 mb-2"
         />
         
-        <input
-          type="text"
-          placeholder="Kategorie"
+        {/* Dropdown for category selection */}
+        <select
           value={category}
           onChange={(e) => setCategory(e.target.value)}
           className="border px-2 py-1 mb-2"
-        />
+        >
+          <option value="">Kategorie wählen</option>
+          <option value="Arztbesuch">Arztbesuch</option>
+          <option value="Medikamente">Medikamente</option>
+          <option value="Kontrolle">Kontrolle</option>
+          <option value="Sonstiges">Sonstiges</option>
+        </select>
+
         <textarea
           placeholder="Beschreibung"
           value={description}
