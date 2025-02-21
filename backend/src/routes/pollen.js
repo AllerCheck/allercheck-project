@@ -3,9 +3,8 @@ import axios from "axios";
 import dotenv from "dotenv";
 dotenv.config();
 const router = express.Router();
-// const apiKey = process.env.VITE_REACT_APP_GOOGLE_MAPS_API_KEY;
+const apiKey = process.env.GOOGLE_MAPS_API_KEY;
 // GET: Pollen-Vorhersage über Google Places API und Pollen API abrufen
-const apiKey = "AIzaSyAsn21yvAcY9GWOhq68y46dqungtF43DvU"
 console.log("apiKey:", apiKey);
 router.get("/", async (req, res) => {
     const location = req.query.location;

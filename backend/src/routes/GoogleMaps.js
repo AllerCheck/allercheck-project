@@ -4,7 +4,7 @@ import fetch from "node-fetch";
 
 dotenv.config();
 const router = express.Router();
-const GOOGLE_MAPS_API_KEY = process.env.VITE_REACT_APP_GOOGLE_MAPS_API_KEY;
+const GOOGLE_MAPS_API_KEY = process.env.GOOGLE_MAPS_API_KEY;
 
 if (!GOOGLE_MAPS_API_KEY) {
     console.error("Google Maps API key is missing in backend .env");
