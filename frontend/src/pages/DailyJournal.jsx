@@ -75,7 +75,7 @@ const DailyJournal = () => {
                         key={num}
                         type="button"
                         className={`w-10 h-10 rounded-full text-white font-semibold transition ${
-                          journal[area] === num ? "bg-red-500" : "bg-gray-300 hover:bg-gray-400"
+                          journal[area] === num ? "bg-red-400" : "bg-gray-300 hover:bg-red-400"
                         }`}
                         onClick={() => handleChange(area, num)}
                       >

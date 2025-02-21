@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
-import {} from "../API/appointmentsApi";
+import { } from "../API/appointmentsApi";
+import NavigationButtons from "../components/NavigationButtons";
 
 const Appointments = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -98,8 +99,12 @@ const Appointments = () => {
   };
 
   return (
-    <div className="calendar-container">
-      <h2>Meine Termine</h2>
+    
+    <div className="flex flex-col items-center py-10">
+      <div className="mb-10">
+        <NavigationButtons />
+      </div>
+      <h2 className="text-2xl font-semibold text-center mb-4">My Appointments</h2>
       <Calendar
         onChange={setSelectedDate} // Sets selected date
         value={selectedDate} // Bind the selected date value
