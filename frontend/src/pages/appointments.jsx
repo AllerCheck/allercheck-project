@@ -153,10 +153,10 @@ const Appointments = () => {
         onClick={handleSaveAppointment}
         className="bg-blue-500 text-white px-4 py-2 mt-4"
       >
-        Termin speichern
+        Save Appointment
       </button>
 
-      <h3>Gespeicherte Termine:</h3>
+      <h3 className="mt-6 font-bold mb-2">The list of your appointments:</h3>
       <ul>
         {appointments.map((appt) => (
           <li key={appt.id}>
