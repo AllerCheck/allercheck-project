@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate for redirection
 import NavigationButtons from "../components/NavigationButtons";
 import axios from "axios";
 
@@ -8,11 +9,20 @@ const DailyJournal = () => {
     eyes: 0,
     lungs: 0,
     skin: 0,
-    medications: false, // Single checkbox for medication
+    medications: false,
     notes: "",
   });
 
-  const [token] = useState(localStorage.getItem("token") || ""); // Assuming token is stored in localStorage
+  const navigate = useNavigate();
+  const token = localStorage.getItem("token");
+
+  // Redirect to login if user is not authenticated
+  useEffect(() => {
+    if (!token) {
+      console.log("User not authenticated, redirecting to login...");
+      navigate("/login");
+    }
+  }, [token, navigate]); // Runs only when component mounts
 
   // Update state for journal entries
   const handleChange = (field, value) => {
@@ -24,13 +34,11 @@ const DailyJournal = () => {
     e.preventDefault();
     console.log("Journal Entry:", journal);
 
-    // Check if there is a valid token
     if (!token) {
       alert("User is not authenticated.");
       return;
     }
 
-    // Make a POST request to the backend API to save the journal entry
     axios
       .post(
         "http://localhost:5000/journal",
@@ -43,9 +51,7 @@ const DailyJournal = () => {
           notes: journal.notes,
         },
         {
-          headers: {
-            Authorization: `Bearer ${token}`, // Send the token for authentication
-          },
+          headers: { Authorization: `Bearer ${token}` },
         }
       )
       .then((response) => {
@@ -67,7 +73,6 @@ const DailyJournal = () => {
         <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">Personal Allergy Journal</h2>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="flex justify-center gap-12">
-            {/* Left Side (Symptoms) */}
             <div className="flex flex-col items-center space-y-6 w-full md:w-1/2">
               {["nose", "eyes", "lungs", "skin"].map((area) => (
                 <div key={area} className="text-center">
@@ -91,35 +96,27 @@ const DailyJournal = () => {
             </div>
           </div>
 
-          {/* Medications Section Below Symptoms */}
           <div className="flex justify-center w-full flex-col items-center space-y-4 mt-6">
             <div className="text-center">
               <label className="block text-lg font-semibold capitalize text-gray-700 mb-2">Medications</label>
-              <div className="flex justify-center gap-6">
-                <div className="flex flex-col items-center">
-                  <input
-                    type="checkbox"
-                    checked={journal.medications}
-                    onChange={() => handleChange("medications", !journal.medications)}
-                    className="w-6 h-6 rounded border-gray-300 focus:ring-2 focus:ring-blue-300"
-                  />
-                </div>
-              </div>
+              <input
+                type="checkbox"
+                checked={journal.medications}
+                onChange={() => handleChange("medications", !journal.medications)}
+                className="w-6 h-6 rounded border-gray-300 focus:ring-2 focus:ring-blue-300"
+              />
             </div>
           </div>
 
-          {/* Notes Input */}
           <div className="w-full">
-            <div>
-              <label className="block text-lg font-semibold text-gray-700 mb-2">Notes</label>
-              <textarea
-                className="w-full p-3 border border-gray-300 rounded-md focus:ring focus:ring-blue-300"
-                rows="2"
-                value={journal.notes}
-                onChange={(e) => handleChange("notes", e.target.value)}
-                placeholder="Additional notes..."
-              ></textarea>
-            </div>
+            <label className="block text-lg font-semibold text-gray-700 mb-2">Notes</label>
+            <textarea
+              className="w-full p-3 border border-gray-300 rounded-md focus:ring focus:ring-blue-300"
+              rows="2"
+              value={journal.notes}
+              onChange={(e) => handleChange("notes", e.target.value)}
+              placeholder="Additional notes..."
+            ></textarea>
 
             <button
               type="submit"
@@ -130,7 +127,6 @@ const DailyJournal = () => {
           </div>
         </form>
 
-        {/* Intensity Legend in One Line */}
         <div className="mt-8 text-sm text-gray-600 flex space-x-4 justify-center">
           <p><span className="font-bold">0</span> = no symptoms</p>
           <p><span className="font-bold">1</span> = little</p>
