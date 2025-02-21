@@ -1,14 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-import Home from "./pages/Home";
-import LoginForm from "./components/LoginForm";
-import RegisterForm from "./components/RegisterForm";
-import { ProfilePage } from "./pages/Profile";
-import DailyJournal from "./pages/DailyJournal";
-import Statistics from "./pages/Statistics";
-import FindDoctor from "./pages/Find";
-import Appointments from "./pages/appointments";
+import routes from "./routes"; // Import routes array
 
 function App() {
   return (
@@ -17,14 +10,9 @@ function App() {
 
       <main className="flex-grow overflow-y-auto pb-4">
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<LoginForm />} />
-          <Route path="/register" element={<RegisterForm />} />
-          <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/journal" element={<DailyJournal />} />
-          <Route path="/statistics" element={<Statistics />} />
-          <Route path="/appointments" element={<Appointments />} />
-          <Route path="/find" element={<FindDoctor />} />
+          {routes.map((route, index) => (
+            <Route key={index} path={route.path} element={route.element} />
+          ))}
         </Routes>
       </main>
 
