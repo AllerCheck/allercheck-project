@@ -13,8 +13,8 @@ function Home() {
   const [articlesError, setArticlesError] = useState(null);  // Error state for articles
 
   // Pagination state for articles
-  const [currentPageArticles, setCurrentPageArticles] = useState(1);
-  const articlesPerPage = 3;
+  const [currentPageArticles] = useState(1);
+  const articlesPerPage = 10;
 
   // Pagination state for pollen data
   const [currentPagePollen] = useState(1);
@@ -64,23 +64,6 @@ function Home() {
   const indexOfLastPollen = currentPagePollen * pollenPerPage;
   const indexOfFirstPollen = indexOfLastPollen - pollenPerPage;
   const currentPollenData = pollenData?.dailyInfo?.slice(indexOfFirstPollen, indexOfLastPollen);
-
-  // Change page for articles
-  const nextPageArticles = () => {
-    if (currentPageArticles < Math.ceil(articles.length / articlesPerPage)) {
-      setCurrentPageArticles(currentPageArticles + 1);
-    }
-  };
-
-  const prevPageArticles = () => {
-    if (currentPageArticles > 1) {
-      setCurrentPageArticles(currentPageArticles - 1);
-    }
-  };
-
-  // Total pages for articles
-  const totalPagesArticles = Math.ceil(articles.length / articlesPerPage);
-
 
   return (
     <div className="flex flex-col">
