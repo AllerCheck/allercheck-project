@@ -14,9 +14,13 @@ function Home() {
   const [pollenError, setPollenError] = useState(null);  // Error state for pollen data
   const [articlesError, setArticlesError] = useState(null);  // Error state for articles
 
-  // Pagination state
-  const [currentPage, setCurrentPage] = useState(1);
+  // Pagination state for articles
+  const [currentPageArticles, setCurrentPageArticles] = useState(1);
   const articlesPerPage = 3;
+
+  // Pagination state for pollen data
+  const [currentPagePollen, setCurrentPagePollen] = useState(1);
+  const pollenPerPage = 1;  // Show 1 pollen record per page
 
   const handleNavigation = (path) => {
     const isAuthenticated = localStorage.getItem("token"); // Check user authentication
@@ -32,35 +36,17 @@ function Home() {
   useEffect(() => {
     const getPollenData = async () => {
       try {
-        const response = await fetchPollenData(location);
-        console.log("location", location);
-        
-        // Log response status
-        console.log("Response status:", response.status);
-    
-        // Get the response body as text
-        const text = await response.text();
-        console.log("Response body:", text);
-    
-        // If the response is OK, try to parse it
-        if (response.ok) {
-          const data = JSON.parse(text);
-          setPollenData(data);
-          setPollenError(null); // Reset error state
-        } else {
-          throw new Error(`Error fetching pollen data: ${response.statusText}`);
-        }
+        const data = await fetchPollenData(location);  // Correctly receive parsed JSON data
+        setPollenData(data);  // Set the data in state
+        setPollenError(null);
       } catch (error) {
         console.error("Error fetching pollen data:", error);
         setPollenError("Error fetching pollen data. Please try again later.");
       }
     };
-    
-    
-    
 
     getPollenData();
-  }, [location]);
+  }, [location]); // Runs when 'location' changes
 
   // Fetch articles related to allergies
   useEffect(() => {
@@ -81,26 +67,47 @@ function Home() {
     getArticles(); // Fetch articles on component mount
   }, []);
 
-  // Pagination logic: Get current articles based on page
-  const indexOfLastArticle = currentPage * articlesPerPage;
+  // Pagination logic for articles: Get current articles based on page
+  const indexOfLastArticle = currentPageArticles * articlesPerPage;
   const indexOfFirstArticle = indexOfLastArticle - articlesPerPage;
   const currentArticles = articles.slice(indexOfFirstArticle, indexOfLastArticle);
 
-  // Change page
-  const nextPage = () => {
-    if (currentPage < Math.ceil(articles.length / articlesPerPage)) {
-      setCurrentPage(currentPage + 1);
+  // Pagination logic for pollen data: Get current pollen data based on page
+  const indexOfLastPollen = currentPagePollen * pollenPerPage;
+  const indexOfFirstPollen = indexOfLastPollen - pollenPerPage;
+  const currentPollenData = pollenData?.dailyInfo?.slice(indexOfFirstPollen, indexOfLastPollen);
+
+  // Change page for articles
+  const nextPageArticles = () => {
+    if (currentPageArticles < Math.ceil(articles.length / articlesPerPage)) {
+      setCurrentPageArticles(currentPageArticles + 1);
     }
   };
 
-  const prevPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
+  const prevPageArticles = () => {
+    if (currentPageArticles > 1) {
+      setCurrentPageArticles(currentPageArticles - 1);
     }
   };
 
-  // Total pages
-  const totalPages = Math.ceil(articles.length / articlesPerPage);
+  // Change page for pollen data
+  const nextPagePollen = () => {
+    if (currentPagePollen < Math.ceil((pollenData?.dailyInfo?.length || 0) / pollenPerPage)) {
+      setCurrentPagePollen(currentPagePollen + 1);
+    }
+  };
+
+  const prevPagePollen = () => {
+    if (currentPagePollen > 1) {
+      setCurrentPagePollen(currentPagePollen - 1);
+    }
+  };
+
+  // Total pages for articles
+  const totalPagesArticles = Math.ceil(articles.length / articlesPerPage);
+
+  // Total pages for pollen data
+  const totalPagesPollen = Math.ceil((pollenData?.dailyInfo?.length || 0) / pollenPerPage);
 
   return (
     <div className="flex flex-col">
@@ -134,20 +141,20 @@ function Home() {
                 </ul>
               )}
               <div className="flex justify-between items-center mt-4 text-sm">
-                {/* Pagination controls */}
+                {/* Pagination controls for articles */}
                 <button
-                  onClick={prevPage}
-                  disabled={currentPage === 1}
+                  onClick={prevPageArticles}
+                  disabled={currentPageArticles === 1}
                   className="text-blue-500 disabled:text-gray-400"
                 >
                   Prev
                 </button>
                 <span>
-                  Page {currentPage} of {totalPages}
+                  Page {currentPageArticles} of {totalPagesArticles}
                 </span>
                 <button
-                  onClick={nextPage}
-                  disabled={currentPage === totalPages}
+                  onClick={nextPageArticles}
+                  disabled={currentPageArticles === totalPagesArticles}
                   className="text-blue-500 disabled:text-gray-400"
                 >
                   Next
@@ -161,13 +168,96 @@ function Home() {
         <div className="bg-green-100 p-6 text-xl font-bold rounded-2xl w-1/2 md:w-1/3">
           <h3 className="text-2xl font-semibold mb-4">Pollen Forecast</h3>
           {pollenError ? (
-            <p className="text-red-600">{pollenError}</p> // Display error message for pollen data
-          ) : pollenData ? (
+            <p className="text-red-600">{pollenError}</p>
+          ) : currentPollenData && currentPollenData.length > 0 ? (
             <div>
-              <p><strong>Location:</strong> {pollenData.location}</p>
-              <p><strong>Forecast:</strong> {pollenData.forecast}</p>
-              <p><strong>Pollen Level:</strong> {pollenData.pollen_level}</p>
-              <p><strong>Additional Info:</strong> {pollenData.info}</p>
+              <p><strong>Region Code:</strong> {pollenData.regionCode}</p>
+
+              {currentPollenData.map((day, index) => (
+                <div key={index} className="mt-4 p-4 bg-white rounded-lg text-black">
+                  <p><strong>Date:</strong> {day.date?.day}/{day.date?.month}/{day.date?.year}</p>
+
+                  {/* Pollen Type Info */}
+                  <h4 className="font-semibold mt-2">Pollen Types:</h4>
+                  <ul className="list-disc ml-4">
+                    {day.pollenTypeInfo.map((pollen, i) => (
+                      <li key={i}>
+                        <strong>{pollen.displayName}</strong> {pollen.inSeason ? "(In Season)" : ""}
+                        {pollen.indexInfo && (
+                          <>
+                            <p><strong>Index:</strong> {pollen.indexInfo.value} ({pollen.indexInfo.category})</p>
+                            <p className="text-gray-600 text-sm italic">{pollen.indexInfo.indexDescription}</p>
+                            <div
+                              className="w-6 h-6 rounded-full mt-1"
+                              style={{ backgroundColor: `rgb(${pollen.indexInfo.color.green * 255}, 0, ${pollen.indexInfo.color.blue * 255})` }}
+                            ></div>
+                          </>
+                        )}
+                        {pollen.healthRecommendations?.length > 0 && (
+                          <ul className="list-disc ml-6 text-sm text-red-600">
+                            {pollen.healthRecommendations.map((rec, j) => (
+                              <li key={j}>⚠ {rec}</li>
+                            ))}
+                          </ul>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+
+                  {/* Plant Info */}
+                  <h4 className="font-semibold mt-2">Plants:</h4>
+                  <ul className="list-disc ml-4">
+                    {day.plantInfo.map((plant, i) => (
+                      <li key={i} className="mt-2">
+                        <strong>{plant.displayName}</strong> {plant.inSeason ? "(In Season)" : ""}
+                        {plant.indexInfo && (
+                          <>
+                            <p><strong>Index:</strong> {plant.indexInfo.value} ({plant.indexInfo.category})</p>
+                            <p className="text-gray-600 text-sm italic">{plant.indexInfo.indexDescription}</p>
+                            <div
+                              className="w-6 h-6 rounded-full mt-1"
+                              style={{ backgroundColor: `rgb(${plant.indexInfo.color.green * 255}, 0, ${plant.indexInfo.color.blue * 255})` }}
+                            ></div>
+                          </>
+                        )}
+                        {plant.plantDescription && (
+                          <div className="mt-2 p-2 bg-gray-100 rounded-lg">
+                            <p><strong>Type:</strong> {plant.plantDescription.type}</p>
+                            <p><strong>Family:</strong> {plant.plantDescription.family}</p>
+                            <p><strong>Season:</strong> {plant.plantDescription.season}</p>
+                            <p><strong>Cross-Reactions:</strong> {plant.plantDescription.crossReaction}</p>
+                            <p className="text-gray-600 text-sm italic">{plant.plantDescription.specialShapes}</p>
+                            <div className="flex gap-2 mt-2">
+                              <img src={plant.plantDescription.picture} alt={plant.displayName} className="w-16 h-16 rounded-lg" />
+                              <img src={plant.plantDescription.pictureCloseup} alt={`${plant.displayName} Close-up`} className="w-16 h-16 rounded-lg" />
+                            </div>
+                          </div>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+              <div className="flex justify-between items-center mt-4 text-sm">
+                {/* Pagination controls for pollen data */}
+                <button
+                  onClick={prevPagePollen}
+                  disabled={currentPagePollen === 1}
+                  className="text-blue-500 disabled:text-gray-400"
+                >
+                  Prev
+                </button>
+                <span>
+                  Page {currentPagePollen} of {totalPagesPollen}
+                </span>
+                <button
+                  onClick={nextPagePollen}
+                  disabled={currentPagePollen === totalPagesPollen}
+                  className="text-blue-500 disabled:text-gray-400"
+                >
+                  Next
+                </button>
+              </div>
             </div>
           ) : (
             <p>Loading pollen data...</p>
