@@ -1,14 +1,12 @@
 // src/pages/Home.jsx
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { fetchPollenData } from "../api/PollenApi";  // Import the API function
 import { fetchArticles } from "../api/ArticlesApi"; // Import the News API function
 import HomeButtons from "../components/HomeButtons";
 
 function Home() {
-  const navigate = useNavigate();
   const [pollenData, setPollenData] = useState(null);  // State for pollen data
-  const [location, setLocation] = useState("Berlin");  // Default location
+  const [location] = useState("Berlin");  // Default location
   const [articles, setArticles] = useState([]); // State for articles
   const [loadingArticles, setLoadingArticles] = useState(true); // State for article loading
   const [pollenError, setPollenError] = useState(null);  // Error state for pollen data
@@ -19,20 +17,10 @@ function Home() {
   const articlesPerPage = 3;
 
   // Pagination state for pollen data
-  const [currentPagePollen, setCurrentPagePollen] = useState(1);
+  const [currentPagePollen] = useState(1);
   const pollenPerPage = 1;  // Show 1 pollen record per page
 
-  const handleNavigation = (path) => {
-    const isAuthenticated = localStorage.getItem("token"); // Check user authentication
-    console.log("isAuthenticated", isAuthenticated);
-    if (isAuthenticated) {
-      navigate(path); // Go to the requested page if authenticated
-    } else {
-      navigate("/login"); // Redirect to login if not authenticated
-    }
-  };
-
-  // Fetch pollen data when the component mounts or location changes
+   // Fetch pollen data when the component mounts or location changes
   useEffect(() => {
     const getPollenData = async () => {
       try {
@@ -90,24 +78,9 @@ function Home() {
     }
   };
 
-  // Change page for pollen data
-  const nextPagePollen = () => {
-    if (currentPagePollen < Math.ceil((pollenData?.dailyInfo?.length || 0) / pollenPerPage)) {
-      setCurrentPagePollen(currentPagePollen + 1);
-    }
-  };
-
-  const prevPagePollen = () => {
-    if (currentPagePollen > 1) {
-      setCurrentPagePollen(currentPagePollen - 1);
-    }
-  };
-
   // Total pages for articles
   const totalPagesArticles = Math.ceil(articles.length / articlesPerPage);
 
-  // Total pages for pollen data
-  const totalPagesPollen = Math.ceil((pollenData?.dailyInfo?.length || 0) / pollenPerPage);
 
   return (
     <div className="flex flex-col">
@@ -118,60 +91,41 @@ function Home() {
       {/* Flexbox layout for Articles and Wetter */}
       <div className="flex justify-center gap-x-6 p-4 min-h-96 ml-2 mr-2">
         {/* Articles section */}
-        <div className="bg-teal-50 p-6 text-xl font-bold rounded-2xl w-3/4 md:w-2/3">
-          <h2 className="text-xl mb-4">Allergy related news</h2>
-          {loadingArticles ? (
-            <p>Loading articles...</p>
-          ) : articlesError ? (
-            <p className="text-red-600">{articlesError}</p> // Display error message for articles
-          ) : (
-            <div>
-              {currentArticles.length === 0 ? (
-                <p>No articles found.</p>
-              ) : (
-                <ul>
-                  {currentArticles.map((article, index) => (
-                    <li key={index} className="mb-4">
-                      <a href={article.url} target="_blank" rel="noopener noreferrer" className="text-blue-600">
-                        <h3 className="text-lg font-semibold">{article.title}</h3>
-                        <p>{article.description}</p>
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              )}
-              <div className="flex justify-between items-center mt-4 text-sm">
-                {/* Pagination controls for articles */}
-                <button
-                  onClick={prevPageArticles}
-                  disabled={currentPageArticles === 1}
-                  className="text-blue-500 disabled:text-gray-400"
-                >
-                  Prev
-                </button>
-                <span>
-                  Page {currentPageArticles} of {totalPagesArticles}
-                </span>
-                <button
-                  onClick={nextPageArticles}
-                  disabled={currentPageArticles === totalPagesArticles}
-                  className="text-blue-500 disabled:text-gray-400"
-                >
-                  Next
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
+{/* Articles section */}
+<div className="bg-teal-50 p-6 text-xl font-bold rounded-2xl w-3/4 md:w-2/3 h-96 overflow-y-auto">
+  <h2 className="text-xl mb-4">Allergy related news</h2>
+  {loadingArticles ? (
+    <p>Loading articles...</p>
+  ) : articlesError ? (
+    <p className="text-red-600">{articlesError}</p> 
+  ) : (
+    <div>
+      {currentArticles.length === 0 ? (
+        <p>No articles found.</p>
+      ) : (
+        <ul>
+          {currentArticles.map((article, index) => (
+            <li key={index} className="mb-4">
+              <a href={article.url} target="_blank" rel="noopener noreferrer" className="text-blue-600">
+                <h3 className="text-lg font-semibold">{article.title}</h3>
+                <p>{article.description}</p>
+              </a>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  )}
+</div>
 
-        {/* Pollen data section */}
-        <div className="bg-green-100 p-6 text-xl font-bold rounded-2xl w-1/2 md:w-1/3">
-          <h3 className="text-2xl font-semibold mb-4">Pollen Forecast</h3>
-          {pollenError ? (
-            <p className="text-red-600">{pollenError}</p>
-          ) : currentPollenData && currentPollenData.length > 0 ? (
-            <div>
-              <p><strong>Region Code:</strong> {pollenData.regionCode}</p>
+{/* Pollen data section */}
+<div className="bg-green-100 p-6 text-xl font-bold rounded-2xl w-1/2 md:w-1/3 h-96 overflow-y-auto">
+  <h3 className="text-2xl font-semibold mb-4">Pollen Forecast</h3>
+  {pollenError ? (
+    <p className="text-red-600">{pollenError}</p>
+  ) : currentPollenData && currentPollenData.length > 0 ? (
+    <div>
+              {/* <p><strong>Region Code:</strong> {pollenData.regionCode}</p> */}
 
               {currentPollenData.map((day, index) => (
                 <div key={index} className="mt-4 p-4 bg-white rounded-lg text-black">
@@ -238,31 +192,14 @@ function Home() {
                   </ul>
                 </div>
               ))}
-              <div className="flex justify-between items-center mt-4 text-sm">
-                {/* Pagination controls for pollen data */}
-                <button
-                  onClick={prevPagePollen}
-                  disabled={currentPagePollen === 1}
-                  className="text-blue-500 disabled:text-gray-400"
-                >
-                  Prev
-                </button>
-                <span>
-                  Page {currentPagePollen} of {totalPagesPollen}
-                </span>
-                <button
-                  onClick={nextPagePollen}
-                  disabled={currentPagePollen === totalPagesPollen}
-                  className="text-blue-500 disabled:text-gray-400"
-                >
-                  Next
-                </button>
-              </div>
+              
             </div>
           ) : (
             <p>Loading pollen data...</p>
           )}
         </div>
+
+
       </div>
 
       <HomeButtons />
