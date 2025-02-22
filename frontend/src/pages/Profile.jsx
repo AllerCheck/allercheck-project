@@ -5,7 +5,6 @@ import {
   updateProfile,
   updateEmail,
   updatePassword,
-  deleteProfile,
   getAllergies,
   getMedications,
 } from "../api/ProfileApi";
