@@ -146,9 +146,9 @@ const ProfilePage = () => {
 
   return (
     <div className="flex flex-col items-center py-10">
-      <div className="mb-10">
+      {/* <div className="mb-10">
         <NavigationButtons />
-      </div>
+      </div> */}
 
       {error && <div className="text-red-500 text-center mb-4">{error}</div>}
 

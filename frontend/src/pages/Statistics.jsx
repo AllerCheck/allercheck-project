@@ -148,7 +148,7 @@ const Statistics = () => {
 
     return (
         <div className="flex flex-col items-center py-10">
-            <NavigationButtons />
+            {/* <NavigationButtons /> */}
             <h2 className="text-2xl font-semibold text-center mb-4">Records</h2>
             <div className="flex space-x-2">
                 <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} className="border p-2 rounded" />

@@ -102,7 +102,7 @@ const Appointments = () => {
     
     <div className="flex flex-col items-center py-10">
       <div className="mb-10">
-        <NavigationButtons />
+        {/* <NavigationButtons /> */}
       </div>
       <h2 className="text-2xl font-semibold text-center mb-4">My Appointments</h2>
       <Calendar

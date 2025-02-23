@@ -79,7 +79,7 @@ const FindDoctor = () => {
 
     return (
         <div className="flex flex-col items-center py-10">
-            <NavigationButtons />
+            {/* <NavigationButtons /> */}
             <h2 className="text-2xl font-semibold text-center mb-4">Allergy Doctors nearby</h2>
             <div id="map" style={{ width: "100%", height: "500px" }}></div>
             <ul className="mt-4">

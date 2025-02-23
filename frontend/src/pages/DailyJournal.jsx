@@ -59,7 +59,7 @@ const DailyJournal = () => {
   return (
     <div className="flex flex-col items-center py-10">
       <div className="mb-10">
-        <NavigationButtons />
+        {/* <NavigationButtons /> */}
       </div>
       <div className="max-w-5xl min-w-96 mx-auto p-6 bg-white shadow-lg rounded-lg">
         <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">Personal Allergy Journal</h2>
