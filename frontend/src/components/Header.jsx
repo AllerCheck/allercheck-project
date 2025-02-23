@@ -11,11 +11,11 @@ const Header = () => {
 
   const handleLogout = () => {
     logout();
-    navigate("/login");
+    navigate("/");
   };
 
   return (
-    <header className="bg-gray-300 p-4 flex justify-between items-center">
+    <header className="bg-teal-200 p-4 px-12 flex justify-between items-center">
       <Link to="/" className="font-bold text-xl">
         AllerCheck
       </Link>

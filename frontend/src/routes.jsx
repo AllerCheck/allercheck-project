@@ -8,6 +8,7 @@ import Statistics from "./pages/Statistics";
 import FindDoctor from "./pages/Find";
 import Appointments from "./pages/appointments";
 import ProtectedRoute from "./components/ProtectedRoute"; // Import ProtectedRoute
+import ScannerPage from "./pages/ScannerPage";
 
 const routes = [
   { path: "/", element: <Home /> },
@@ -18,6 +19,7 @@ const routes = [
   { path: "/statistics", element: <ProtectedRoute element={<Statistics />} /> },
   { path: "/appointments", element: <ProtectedRoute element={<Appointments />} /> },
   { path: "/find", element: <ProtectedRoute element={<FindDoctor />} /> },
+  { path: "/scanner", element: <ProtectedRoute element={<ScannerPage />} /> },
   { path: "*", element: <Navigate to="/" replace /> }
 ];
 

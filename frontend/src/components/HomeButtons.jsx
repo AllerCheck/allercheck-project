@@ -7,7 +7,7 @@ const HomeButtons = () => {
     <div className="flex justify-center space-x-20 mt-6">
       <Button
         label="Barcode Scanner"
-        onClick={() => navigate("/barcode-scanner")}
+        onClick={() => navigate("/scanner")}
         className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition text-center max-w-32 inline-block cursor-pointer"
       />
       <Button
