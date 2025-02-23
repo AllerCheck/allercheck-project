@@ -7,8 +7,15 @@ const HeaderWithNav = () => {
   const { token, first_name, logout } = useAuthStore();
 
   const handleLoginClick = () => {
-    navigate(token ? "/profile" : "/login");
+    if (!token) {
+      navigate("/login");
+    }
   };
+  
+  /* Function to redirect to profile by clicking on First Name */
+  // const handleLoginClick = () => {
+  //   navigate(token ? "/profile" : "/login");
+  // }; 
 
   const handleLogout = () => {
     logout();
@@ -31,15 +38,14 @@ const HeaderWithNav = () => {
             <NavigationButtons />
           </nav>
         )}
-        {/* User Info / Login / Logout Button */}
+        {/* User Info / Login */}
         <div className="flex items-center gap-4">
           <span
             onClick={handleLoginClick}
-            className="cursor-pointer flex items-center gap-2"
+            className="flex items-center gap-2"
           >
-            {token ? (<span className="text-lg font-bold mr-4">
-              {first_name || "User"}
-              {/* first_name || "User" // Show first_name if available */}
+            {token ? (<span className="px-4 py-2 text-blue font-semibold text-xl ">
+              {"Hi" + " " + first_name || "User"}
             </span>
             ) : (
               <svg

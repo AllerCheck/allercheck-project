@@ -3,11 +3,19 @@ import useAuthStore from "../store/useAuthStore";
 
 const Header = () => {
   const navigate = useNavigate();
-  const { token, first_name } = useAuthStore(); // Use first_name instead of username
+  const { token, first_name } = useAuthStore();
 
+  
   const handleLoginClick = () => {
-    navigate(token ? "/profile" : "/login");
+    if (!token) {
+      navigate("/login");
+    }
   };
+  
+  /* Function to redirect to profile by clicking on First Name */
+  // const handleLoginClick = () => {
+  //   navigate(token ? "/profile" : "/login");
+  // }; 
 
   return (
     <div className="flex justify-between h-16 w-full">
@@ -23,7 +31,7 @@ const Header = () => {
             className="cursor-pointer flex items-center gap-2 text-lg font-bold"
           >
             {token ? (
-              <span className="text-lg font-bold">{first_name || "User"}</span>
+              <span>{first_name || "User"}</span>
             ) : (
               <svg
                 xmlns="http://www.w3.org/2000/svg"
