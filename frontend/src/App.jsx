@@ -9,7 +9,7 @@ function App() {
   const { token } = useAuthStore(); // Check if user is logged in
 
   return (
-    <div className="flex flex-col min-h-screen bg-white-50">
+    <div className="flex flex-col min-h-screen bg-white-100">
       {/* Show HeaderWithNav if logged in, otherwise show Header */}
       {token ? <HeaderWithNav /> : <Header />}
 
