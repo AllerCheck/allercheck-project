@@ -5,6 +5,7 @@ const NavigationButtons = () => {
   const navigate = useNavigate();
   return (
     <div className="flex gap-28 mb-4">
+      <Button label="Scanner" onClick={() => navigate("/scanner")} />
       <Button label="Journal" onClick={() => navigate("/journal")} />
       <Button label="Records" onClick={() => navigate("/statistics")} />
       <Button label="Appointments" onClick={() => navigate("/appointments")} />
