@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import NavigationButtons from "../components/NavigationButtons";
+// import NavigationButtons from "../components/NavigationButtons";
 
 const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_REACT_APP_GOOGLE_MAPS_API_KEY;
-console.log(import.meta.env.VITE_REACT_APP_GOOGLE_MAPS_API_KEY);
+// console.log(import.meta.env.VITE_REACT_APP_GOOGLE_MAPS_API_KEY);
 
 
 const FindDoctor = () => {
