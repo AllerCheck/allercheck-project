@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
-import NavigationButtons from "../components/NavigationButtons";
 
 const Appointments = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -9,20 +8,27 @@ const Appointments = () => {
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
   const [description, setDescription] = useState("");
-  const [appointmentDate, setAppointmentDate] = useState(""); // New state for the input field
+  const [appointmentTime, setAppointmentTime] = useState("");
 
   const token = localStorage.getItem("token");
 
-  // 🟢 Termine aus dem Backend laden
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
         const response = await fetch("http://localhost:5000/appointments", {
           headers: { Authorization: `Bearer ${token}` },
         });
+
         if (response.ok) {
           const data = await response.json();
-          setAppointments(data);
+
+          // Ensure appointment dates are properly converted to Date objects
+          const formattedAppointments = data.map((appt) => ({
+            ...appt,
+            appointment_date: new Date(appt.appointment_date),
+          }));
+
+          setAppointments(formattedAppointments);
         }
       } catch (error) {
         console.error("❌ Fehler beim Laden der Termine:", error);
@@ -32,36 +38,30 @@ const Appointments = () => {
     fetchAppointments();
   }, [token]);
 
-  // 🟢 Format the date to match 'YYYY-MM-DD HH:MM:SS'
   const formatDateForBackend = (date) => {
-    const d = new Date(date);
-    const year = d.getFullYear();
-    const month = String(d.getMonth() + 1).padStart(2, "0"); // months are 0-based, so +1
-    const day = String(d.getDate()).padStart(2, "0");
-    const hours = String(d.getHours()).padStart(2, "0");
-    const minutes = String(d.getMinutes()).padStart(2, "0");
-    const seconds = String(d.getSeconds()).padStart(2, "0");
-
-    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`; // Format: '2025-03-21 00:00:00'
+    // Convert the date to a string that can be saved
+    return new Date(date).toISOString().slice(0, 19).replace("T", " ");
   };
 
-  // 🟢 Format date for `datetime-local` input
+  // Ensure the selected date is set correctly for the input (only date part, no time)
   const formatDateForInput = (date) => {
-    const d = new Date(date);
-    const year = d.getFullYear();
-    const month = String(d.getMonth() + 1).padStart(2, "0");
-    const day = String(d.getDate()).padStart(2, "0");
-    const hours = String(d.getHours()).padStart(2, "0");
-    const minutes = String(d.getMinutes()).padStart(2, "0");
-
-    return `${year}-${month}-${day}T${hours}:${minutes}`; // Format: '2025-03-21T14:30'
+    const normalizedDate = new Date(date);
+    normalizedDate.setHours(0, 0, 0, 0); // Normalize to midnight of the selected day
+    return normalizedDate.toISOString().slice(0, 16); // Format as YYYY-MM-DDTHH:MM
   };
 
-  // 🟢 Termin speichern
+  // Combine the date from the calendar and the selected time from the input field
+  const combineDateAndTime = (date, time) => {
+    const combinedDate = new Date(date);
+    const [hours, minutes] = time.split(":");
+    combinedDate.setHours(hours, minutes, 0, 0); // Set the time part
+    return combinedDate;
+  };
+
   const handleSaveAppointment = async () => {
-    // Use formatted date for the backend
-    const formattedDate = formatDateForBackend(appointmentDate || selectedDate);
-    const limitedCategory = category.slice(0, 255); // Truncate category to max 255 characters
+    const combinedDate = combineDateAndTime(selectedDate, appointmentTime || "00:00");
+
+    const formattedDate = formatDateForBackend(combinedDate);
 
     const response = await fetch("http://localhost:5000/appointments", {
       method: "POST",
@@ -70,25 +70,30 @@ const Appointments = () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        title: title,
+        title,
         appointment_date: formattedDate,
-        category: limitedCategory, // Send truncated category
-        description: description,
+        category,
+        description,
       }),
     });
 
     if (response.ok) {
       alert("✅ Termin gespeichert!");
-      setAppointments([
-        ...appointments,
-        { appointment_date: formattedDate, title, category, description },
-      ]);
-      // Reset form fields after saving
+
+      const newAppointment = {
+        id: Math.random(), // Temporary ID for UI update
+        appointment_date: combinedDate,
+        title,
+        category,
+        description,
+      };
+
+      setAppointments([...appointments, newAppointment]);
       setTitle("");
       setCategory("");
       setDescription("");
-      setAppointmentDate(""); // Reset appointment date input
-      setSelectedDate(new Date()); // Reset calendar date selection
+      setAppointmentTime("");
+      setSelectedDate(new Date());
     } else {
       alert("❌ Fehler beim Speichern des Termins.");
     }
@@ -111,12 +116,14 @@ const Appointments = () => {
     }
   };
 
-  // 🟢 Display appointments on the calendar
-  const tileContent = ({ date, view }) => {
-    const dateStr = date.toISOString().split("T")[0]; // Format: '2025-03-21'
-    const currentAppointments = appointments.filter(
-      (appt) => appt.appointment_date.split(" ")[0] === dateStr
-    );
+  // Display fetched appointments on the calendar
+  const tileContent = ({ date }) => {
+    const dateStr = date.toISOString().split("T")[0];
+
+    const currentAppointments = appointments.filter((appt) => {
+      const apptDateStr = appt.appointment_date.toISOString().split("T")[0];
+      return apptDateStr === dateStr;
+    });
 
     return currentAppointments.length > 0 ? (
       <div className="bg-blue-200 text-xs text-gray-700 rounded p-1">
@@ -131,20 +138,16 @@ const Appointments = () => {
 
   return (
     <div className="flex flex-col items-center py-10">
-      <h2 className="text-2xl font-semibold text-center mb-4">
-        My Appointments
-      </h2>
+      <h2 className="text-2xl font-semibold text-center mb-4">My Appointments</h2>
 
-      {/* Centering the calendar */}
       <div className="w-full max-w-md flex justify-center mb-10">
         <Calendar
-          onChange={setSelectedDate} // Sets selected date
-          value={selectedDate} // Bind the selected date value
-          tileContent={tileContent} // Display appointments on the calendar
+          onChange={setSelectedDate}
+          value={selectedDate}
+          tileContent={tileContent} // Display fetched appointments
         />
       </div>
 
-      {/* Input fields for appointment details */}
       <div className="w-full max-w-md px-4">
         <input
           type="text"
@@ -154,15 +157,20 @@ const Appointments = () => {
           className="w-full border px-4 py-2 mb-4 rounded-md"
         />
 
-        {/* New input field for date selection */}
+        {/* <input
+          type="date"
+          value={formatDateForInput(selectedDate)} // Only date, no time
+          readOnly
+          className="w-full border px-4 py-2 mb-4 rounded-md"
+        /> */}
+
         <input
-          type="datetime-local" // For selecting both date and time
-          value={appointmentDate || formatDateForInput(selectedDate)} // Set default value from selected date if empty
-          onChange={(e) => setAppointmentDate(e.target.value)}
+          type="time"
+          value={appointmentTime}
+          onChange={(e) => setAppointmentTime(e.target.value)}
           className="w-full border px-4 py-2 mb-4 rounded-md"
         />
 
-        {/* Dropdown for category selection */}
         <select
           value={category}
           onChange={(e) => setCategory(e.target.value)}
@@ -196,7 +204,7 @@ const Appointments = () => {
           <li key={appt.id} className="mb-4">
             <strong>{appt.title}</strong>
             <br />
-            {new Date(appt.appointment_date).toLocaleDateString()}
+            {appt.appointment_date.toLocaleString()}
             <br />
             Kategorie: {appt.category}
             <br />
