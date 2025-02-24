@@ -34,7 +34,7 @@ const HeaderWithNav = () => {
 
         {/* Navigation Buttons Below Header */}
         {token && (
-          <nav className="p-4 px-12 mt-4">
+          <nav className="p-4 px-8 mt-4">
             <NavigationButtons />
           </nav>
         )}

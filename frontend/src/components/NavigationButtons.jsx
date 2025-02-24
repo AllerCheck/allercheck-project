@@ -4,7 +4,7 @@ import Button from "./Button"; // Adjust the path if needed
 const NavigationButtons = () => {
   const navigate = useNavigate();
   return (
-    <div className="flex gap-28 mb-4">
+    <div className="flex gap-20 mb-4">
       <Button label="Scanner" onClick={() => navigate("/scanner")} />
       <Button label="Journal" onClick={() => navigate("/journal")} />
       <Button label="Records" onClick={() => navigate("/statistics")} />
