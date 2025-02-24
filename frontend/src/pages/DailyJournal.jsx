@@ -59,7 +59,7 @@ const DailyJournal = () => {
   return (
     <div className="flex flex-col items-center py-10 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-700">
       <h2 className="p-2 mb-6 text-center text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-yellow-600 font-extrabold text-5xl">
-        Personal Allergy Journal
+        My Allergy Journal
       </h2>
       <div className="max-w-5xl min-w-96 mx-auto p-6 bg-white shadow-lg rounded-lg">
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -72,18 +72,18 @@ const DailyJournal = () => {
                   </label>
                   <div className="flex justify-center gap-3">
                     {[0, 1, 2, 3].map((num) => (
-                      <button
-                        key={num}
-                        type="button"
-                        className={`w-10 h-10 rounded-full text-white font-semibold transition ${
-                          journal[area] === num
-                            ? "bg-gradient-to-r from-yellow-300 to-yellow-600"
-                            : "bg-gray-300 hover:bg-gradient-to-r from-yellow-300 to-yellow-600"
-                        }`}
-                        onClick={() => handleChange(area, num)}
-                      >
-                        {num}
-                      </button>
+                     <button
+                     key={num}
+                     type="button"
+                     className={`w-10 h-10 rounded-full font-semibold transition ${
+                       journal[area] === num
+                         ? "bg-gradient-to-r from-yellow-300 to-yellow-600 text-gray-700" // Selected state with gray-700 text
+                         : "bg-gray-300 hover:bg-gradient-to-r from-yellow-300 to-yellow-600 hover:text-gray-700 text-white" // Default state
+                     }`}
+                     onClick={() => handleChange(area, num)}
+                   >
+                     {num}
+                   </button>
                     ))}
                   </div>
                 </div>
