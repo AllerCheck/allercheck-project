@@ -4,7 +4,7 @@ export default function Footer() {
   const [modal, setModal] = useState(null);
 
   return (
-    <footer className="bg-teal-200 py-2 text-center w-full">
+    <footer className="bg-neutral-100 py-2 text-center w-full">
       <div className="mt-0">
         <ul className="flex justify-center space-x-6">
         <p className="text-black">&copy; {new Date().getFullYear()} AllerCheck. All rights reserved.</p>

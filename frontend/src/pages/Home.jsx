@@ -80,8 +80,8 @@ function Home() {
       {/* Flexbox layout for Articles and Wetter */}
       <div className="flex justify-center gap-x-6 p-4 min-h-96 ml-2 mr-2 mb-8">
         {/* Articles section */}
-        <div className="bg-teal-50 p-6 text-xl font-bold rounded-2xl w-3/4 md:w-2/3 h-[50vh] overflow-y-auto scrollbar-hidden hover-scrollbar">
-          <h2 className="text-xl mb-4">Allergy related news</h2>
+        <div className="bg-stone-100 p-6 text-xl font-bold rounded-2xl w-3/4 md:w-2/3 h-[50vh] overflow-y-auto scrollbar-hidden hover-scrollbar">
+          <h2 className="text-2xl font-semibold mb-4">Allergy news</h2>
           {loadingArticles ? (
             <p>Loading articles...</p>
           ) : articlesError ? (
@@ -98,7 +98,7 @@ function Home() {
                         href={article.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-blue-600"
+                        className="text-black"
                       >
                         <h3>{article.title}</h3>
                         <p className="text-lg font-semibold">
@@ -114,7 +114,7 @@ function Home() {
         </div>
 
         {/* Pollen data section */}
-        <div className="bg-green-100 p-6 text-xl font-bold rounded-2xl w-1/2 md:w-1/3 h-[50vh] overflow-y-auto scrollbar-hidden hover-scrollbar">
+        <div className="bg-slate-100 p-6 text-xl font-bold rounded-2xl w-1/2 md:w-1/3 h-[50vh] overflow-y-auto scrollbar-hidden hover-scrollbar">
           <h3 className="text-2xl font-semibold mb-4">Pollen Forecast</h3>
           {pollenError ? (
             <p className="text-red-600">{pollenError}</p>
@@ -123,7 +123,7 @@ function Home() {
               {/* <p><strong>Region Code:</strong> {pollenData.regionCode}</p> */}
 
               {currentPollenData.map((day, index) => (
-                <div key={index} className="mt-4 p-4 rounded-lg text-green-600">
+                <div key={index} className="mt-4 p-4 rounded-lg text-black">
                   <p>
                     <strong>Date:</strong> {day.date?.day}/{day.date?.month}/
                     {day.date?.year}

@@ -25,7 +25,7 @@ const HeaderWithNav = () => {
   return (
     <div className="flex justify-between h-16">
       {/* Main Header */}
-      <header className="bg-teal-200 p-4 px-12 flex items-center justify-between w-full">
+      <header className="bg-neutral-100 p-4 px-12 flex items-center justify-between w-full">
         {/* Logo */}
         <Link to="/" className="font-bold text-xl flex items-center gap-2">
           <img src="/logo.svg" alt="AllerCheck Logo" className="w-10" />
