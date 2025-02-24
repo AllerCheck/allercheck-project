@@ -23,10 +23,17 @@ const Appointments = () => {
           const data = await response.json();
 
           // Ensure appointment dates are properly converted to Date objects
-          const formattedAppointments = data.map((appt) => ({
-            ...appt,
-            appointment_date: new Date(appt.appointment_date),
-          }));
+          const formattedAppointments = data.map((appt) => {
+            const appointmentDate = new Date(appt.appointment_date + 'Z'); // Parse as UTC
+            if (isNaN(appointmentDate.getTime())) {
+              console.error("Invalid date:", appt.appointment_date);
+              return null; // Skip invalid dates
+            }
+            return {
+              ...appt,
+              appointment_date: appointmentDate,
+            };
+          }).filter(appt => appt !== null); // Filter out invalid appointments
 
           setAppointments(formattedAppointments);
         }
@@ -39,18 +46,10 @@ const Appointments = () => {
   }, [token]);
 
   const formatDateForBackend = (date) => {
-    // Convert the date to a string that can be saved
-    return new Date(date).toISOString().slice(0, 19).replace("T", " ");
+    // Convert the date to a string that can be saved in UTC
+    return new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toISOString().slice(0, 19).replace("T", " ");
   };
 
-  // Ensure the selected date is set correctly for the input (only date part, no time)
-  const formatDateForInput = (date) => {
-    const normalizedDate = new Date(date);
-    normalizedDate.setHours(0, 0, 0, 0); // Normalize to midnight of the selected day
-    return normalizedDate.toISOString().slice(0, 16); // Format as YYYY-MM-DDTHH:MM
-  };
-
-  // Combine the date from the calendar and the selected time from the input field
   const combineDateAndTime = (date, time) => {
     const combinedDate = new Date(date);
     const [hours, minutes] = time.split(":");
@@ -116,11 +115,13 @@ const Appointments = () => {
     }
   };
 
-  // Display fetched appointments on the calendar
   const tileContent = ({ date }) => {
     const dateStr = date.toISOString().split("T")[0];
 
     const currentAppointments = appointments.filter((appt) => {
+      if (!appt.appointment_date || isNaN(appt.appointment_date.getTime())) {
+        return false; // Skip invalid dates
+      }
       const apptDateStr = appt.appointment_date.toISOString().split("T")[0];
       return apptDateStr === dateStr;
     });
@@ -156,13 +157,6 @@ const Appointments = () => {
           onChange={(e) => setTitle(e.target.value)}
           className="w-full border px-4 py-2 mb-4 rounded-md"
         />
-
-        {/* <input
-          type="date"
-          value={formatDateForInput(selectedDate)} // Only date, no time
-          readOnly
-          className="w-full border px-4 py-2 mb-4 rounded-md"
-        /> */}
 
         <input
           type="time"
