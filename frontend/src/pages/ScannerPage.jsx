@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import BarcodeScannerComponent from "react-qr-barcode-scanner";
+import { BarcodeScanner } from 'react-barcode-scanner'
 import { useNavigate } from "react-router-dom";
 
 const ScannerPage = () => {
@@ -32,10 +32,10 @@ const ScannerPage = () => {
 
     return (
         <div className="scanner-page">
-            <h2>Scanne dein Produkt</h2>
+            <h2>Scan your product here</h2>
 
             <div className="scanner-box">
-                <BarcodeScannerComponent
+                <BarcodeScanner
                     width={350}
                     height={250}
                     onUpdate={(err, result) => {

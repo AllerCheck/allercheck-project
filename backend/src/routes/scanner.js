@@ -18,9 +18,10 @@ router.get("/", async (req, res) => {
         if (!product) return res.status(404).json({ error: "Produkt nicht gefunden" });
 
         res.json({
+            product_brand: product.brands || "Unbekannte Marke",
             product_name: product.product_name || "Unbekanntes Produkt",
             ingredients: product.ingredients_text || "Keine Zutaten angegeben",
-            allergens: product.allergens ? product.allergens.split(",") : ["Keine Allergene gefunden"],
+            allergens: product.allergens_tags ? product.allergens_tags : ["Keine Allergene gefunden"],
             image: product.image_url || null,
         });
 
