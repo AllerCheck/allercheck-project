@@ -15,13 +15,13 @@ router.get("/", async (req, res) => {
         const response = await axios.get(`https://world.openfoodfacts.org/api/v0/product/${barcode}.json`);
         const product = response.data.product;
 
-        if (!product) return res.status(404).json({ error: "Produkt nicht gefunden" });
+        if (!product) return res.status(404).json({ error: "Product not found" });
 
         res.json({
-            product_brand: product.brands || "Unbekannte Marke",
-            product_name: product.product_name || "Unbekanntes Produkt",
-            ingredients: product.ingredients_text || "Keine Zutaten angegeben",
-            allergens: product.allergens_tags ? product.allergens_tags : ["Keine Allergene gefunden"],
+            product_brand: product.brands || "Unknown Brand",
+            product_name: product.product_name || "Unknown Product",
+            ingredients: product.ingredients_text || "No Ingredients found",
+            allergens: product.allergens_tags ? product.allergens_tags : ["No allergies found"],
             image: product.image_url || null,
         });
 
