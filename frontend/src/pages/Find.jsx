@@ -1,9 +1,6 @@
 import { useState, useEffect } from "react";
-// import NavigationButtons from "../components/NavigationButtons";
 
 const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_REACT_APP_GOOGLE_MAPS_API_KEY;
-// console.log(import.meta.env.VITE_REACT_APP_GOOGLE_MAPS_API_KEY);
-
 
 const FindDoctor = () => {
     const [userLocation, setUserLocation] = useState(null);
@@ -78,21 +75,33 @@ const FindDoctor = () => {
     }, [mapLoaded, userLocation, doctors]);
 
     return (
-        <div className="flex flex-col items-center py-10">
-            {/* <NavigationButtons /> */}
-            <h2 className="text-2xl font-semibold text-center mb-4">Allergy Doctors nearby</h2>
-            <div id="map" style={{ width: "100%", height: "500px" }}></div>
-            <ul className="mt-4">
-                {doctors.map((doctor, index) => (
-                    <li key={index} className="border p-2 m-2">
-                        <strong>{doctor.name}</strong>
-                        <p>{doctor.vicinity}</p>
-                        <p>Opening Hours: {doctor.opening_hours ? "Geöffnet" : "Geschlossen"}</p>
-                        <p>Rating: {doctor.rating} / 5</p>
-                        <a href={`https://www.google.com/maps/dir/?api=1&destination=${doctor.geometry.location.lat},${doctor.geometry.location.lng}`} target="_blank" rel="noopener noreferrer">Route anzeigen</a>
-                    </li>
-                ))}
-            </ul>
+        <div className="flex flex-col items-center py-10 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-700">
+            <h2 className="p-2 mb-6 text-center text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-yellow-600 font-extrabold text-5xl">
+                Allergy Doctors
+            </h2>
+
+            <div id="map" style={{ width: "51%", height: "500px" }} className="mb-8 rounded-md"></div>
+
+            <div className="max-w-5xl min-w-96 mx-auto p-6 bg-white shadow-lg rounded-lg">
+                <ul>
+                    {doctors.map((doctor, index) => (
+                        <li key={index} className="mb-4 p-4 bg-gray-100 shadow rounded-md">
+                            <strong className="text-xl">{doctor.name}</strong>
+                            <p>{doctor.vicinity}</p>
+                            <p>Opening Hours: {doctor.opening_hours ? "Geöffnet" : "Geschlossen"}</p>
+                            <p>Rating: {doctor.rating} / 5</p>
+                            <a
+                                href={`https://www.google.com/maps/dir/?api=1&destination=${doctor.geometry.location.lat},${doctor.geometry.location.lng}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-blue-500 hover:text-blue-700"
+                            >
+                                Route anzeigen
+                            </a>
+                        </li>
+                    ))}
+                </ul>
+            </div>
         </div>
     );
 };

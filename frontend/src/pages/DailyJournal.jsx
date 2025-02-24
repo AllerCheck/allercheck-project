@@ -57,25 +57,28 @@ const DailyJournal = () => {
   };
 
   return (
-    <div className="flex flex-col items-center py-10">
-      <div className="mb-10">
-        {/* <NavigationButtons /> */}
-      </div>
+    <div className="flex flex-col items-center py-10 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-700">
+      <h2 className="p-2 mb-6 text-center text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-yellow-600 font-extrabold text-5xl">
+        Personal Allergy Journal
+      </h2>
       <div className="max-w-5xl min-w-96 mx-auto p-6 bg-white shadow-lg rounded-lg">
-        <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">Personal Allergy Journal</h2>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="flex justify-center gap-12">
             <div className="flex flex-col items-center space-y-6 w-full md:w-1/2">
               {["nose", "eyes", "lungs", "skin"].map((area) => (
                 <div key={area} className="text-center">
-                  <label className="block text-lg font-semibold capitalize text-gray-700 mb-2">{area}</label>
+                  <label className="block text-lg font-semibold capitalize text-gray-700 mb-2">
+                    {area}
+                  </label>
                   <div className="flex justify-center gap-3">
                     {[0, 1, 2, 3].map((num) => (
                       <button
                         key={num}
                         type="button"
                         className={`w-10 h-10 rounded-full text-white font-semibold transition ${
-                          journal[area] === num ? "bg-red-400" : "bg-gray-300 hover:bg-red-400"
+                          journal[area] === num
+                            ? "bg-gradient-to-r from-yellow-300 to-yellow-600"
+                            : "bg-gray-300 hover:bg-gradient-to-r from-yellow-300 to-yellow-600"
                         }`}
                         onClick={() => handleChange(area, num)}
                       >
@@ -88,20 +91,26 @@ const DailyJournal = () => {
             </div>
           </div>
 
-          <div className="flex justify-center w-full flex-col items-center space-y-4 mt-6">
+          <div className="flex justify-center w-full flex-col items-center space-y-4">
             <div className="text-center">
-              <label className="block text-lg font-semibold capitalize text-gray-700 mb-2">Medications</label>
+              <label className="block text-lg font-semibold capitalize text-gray-700 mb-2">
+                Medications
+              </label>
               <input
                 type="checkbox"
                 checked={journal.medications}
-                onChange={() => handleChange("medications", !journal.medications)}
+                onChange={() =>
+                  handleChange("medications", !journal.medications)
+                }
                 className="w-6 h-6 rounded border-gray-300 focus:ring-2 focus:ring-blue-300"
               />
             </div>
           </div>
 
           <div className="w-full">
-            <label className="block text-lg font-semibold text-gray-700 mb-2">Notes</label>
+            <label className="block text-lg font-semibold text-gray-700 mb-2">
+              Notes
+            </label>
             <textarea
               className="w-full p-3 border border-gray-300 rounded-md focus:ring focus:ring-blue-300"
               rows="2"
@@ -112,7 +121,7 @@ const DailyJournal = () => {
 
             <button
               type="submit"
-              className="w-full py-3 bg-green-600 text-white text-lg font-semibold rounded-md hover:bg-green-700 transition mt-6"
+              className="w-full py-3 bg-gray-700 text-white hover:text-gray-700 text-lg font-semibold rounded-md hover:bg-gradient-to-r hover:from-yellow-300 hover:to-yellow-600 mt-6 transition-all cursor-pointer"
             >
               Save Entry
             </button>
@@ -120,10 +129,18 @@ const DailyJournal = () => {
         </form>
 
         <div className="mt-8 text-sm text-gray-600 flex space-x-4 justify-center">
-          <p><span className="font-bold">0</span> = no symptoms</p>
-          <p><span className="font-bold">1</span> = little</p>
-          <p><span className="font-bold">2</span> = moderate</p>
-          <p><span className="font-bold">3</span> = strong</p>
+          <p>
+            <span className="font-bold">0</span> = no symptoms
+          </p>
+          <p>
+            <span className="font-bold">1</span> = little
+          </p>
+          <p>
+            <span className="font-bold">2</span> = moderate
+          </p>
+          <p>
+            <span className="font-bold">3</span> = strong
+          </p>
         </div>
       </div>
     </div>

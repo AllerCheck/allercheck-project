@@ -4,27 +4,27 @@ export default function Footer() {
   const [modal, setModal] = useState(null);
 
   return (
-    <footer className="bg-neutral-100 py-2 text-center w-full">
+    <footer className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-70 py-2 text-center w-full">
       <div className="mt-0">
-        <ul className="flex justify-center space-x-6">
-        <p className="text-black">&copy; {new Date().getFullYear()} AllerCheck. All rights reserved.</p>
+        <ul className="flex justify-center space-x-16">
+        <p className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-yellow-600">&copy; {new Date().getFullYear()} AllerCheck. All rights reserved.</p>
           <li>
-            <button onClick={() => setModal("contact")} className="text-blue-500 hover:underline">
+            <button onClick={() => setModal("contact")} className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-yellow-600 hover:underline cursor-pointer">
               Contact
             </button>
           </li>
           <li>
-            <button onClick={() => setModal("impress")} className="text-blue-500 hover:underline">
+            <button onClick={() => setModal("impress")} className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-yellow-600 hover:underline cursor-pointer">
               Impress
             </button>
           </li>
           <li>
-            <button onClick={() => setModal("policies")} className="text-blue-500 hover:underline">
+            <button onClick={() => setModal("policies")} className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-yellow-600 hover:underline cursor-pointer">
               Policies
             </button>
           </li>
           <li>
-            <button onClick={() => setModal("data-protection")} className="text-blue-500 hover:underline">
+            <button onClick={() => setModal("data-protection")} className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-yellow-600 hover:underline cursor-pointer">
               Data Protection
             </button>
           </li>
@@ -73,9 +73,9 @@ function Modal({ title, children, onClose }) {
   return (
     <div className="fixed inset-0 bg-white/30 flex justify-center items-center">
       <div className="bg-white bg-opacity-95 p-6 rounded shadow-lg w-96">
-        <h2 className="text-xl font-bold mb-2">{title}</h2>
+        <h2 className="text-xl font-bold mb-2 text-yellow-600">{title}</h2>
         <div>{children}</div>
-        <button onClick={onClose} className="mt-4 bg-red-500 text-white px-4 py-2 rounded">
+        <button onClick={onClose} className="mt-4 bg-gray-600 hover:bg-gradient-to-r from-yellow-300 to-yellow-600 hover:text-red-500 hover:font-bold text-white px-4 py-2 rounded">
           Close
         </button>
       </div>

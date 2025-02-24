@@ -8,17 +8,17 @@ const HomeButtons = () => {
       <Button
         label="Barcode Scanner"
         onClick={() => navigate("/scanner")}
-        className="bg-yellow-500 text-white py-2 px-4 rounded-md hover:bg-orange-500 transition text-center max-w-32 inline-block cursor-pointer"
+        className="bg-gray-600 hover:text text-white py-2 px-4 rounded-md transition text-center max-w-32 inline-block cursor-pointer"
       />
       <Button
         label="Allergy Journal"
         onClick={() => navigate("/journal")}
-        className="bg-yellow-500 text-white py-2 px-4 rounded-md hover:bg-orange-500 transition cursor-pointer max-w-32 inline-block"
+        className="bg-gray-600 text-white py-2 px-4 rounded-md transition cursor-pointer max-w-32 inline-block"
       />
       <Button
         label="Appointments"
         onClick={() => navigate("/appointments")}
-        className="bg-yellow-500 text-white py-2 px-4 rounded-md hover:bg-orange-500 transition cursor-pointer max-w-32 inline-block"
+        className="bg-gray-600 text-white py-2 px-4 rounded-md transition cursor-pointer max-w-32 inline-block"
       />
     </div>
   );

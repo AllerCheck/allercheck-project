@@ -137,17 +137,20 @@ const Appointments = () => {
   };
 
   return (
-    <div className="flex flex-col items-center py-10">
-      <h2 className="text-2xl font-semibold text-center mb-4">My Appointments</h2>
-
-      <div className="w-full max-w-md flex justify-center mb-10">
+    <div className="flex flex-col items-center py-10 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-700">
+    <h2 className="p-2 mb-6 text-center text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-yellow-600 font-extrabold text-5xl">
+      My Calendar
+    </h2>
+      <div style={{ width: "0%", height: "500px" }} className="min-w-96 p-6 bg-white shadow-lg rounded-lg flex justify-center mb-6 ">
         <Calendar
           onChange={setSelectedDate}
           value={selectedDate}
           tileContent={tileContent} // Display fetched appointments
         />
       </div>
-
+  
+    <h3 className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-yellow-600 font-extrabold text-5xl mb-2 p-2">New Appointment</h3>
+    <div className="max-w-5xl min-w-96 mx-auto p-6 bg-white shadow-lg rounded-lg">
       <div className="w-full max-w-md px-4">
         <input
           type="text"
@@ -156,21 +159,14 @@ const Appointments = () => {
           onChange={(e) => setTitle(e.target.value)}
           className="w-full border px-4 py-2 mb-4 rounded-md"
         />
-
-        {/* <input
-          type="date"
-          value={formatDateForInput(selectedDate)} // Only date, no time
-          readOnly
-          className="w-full border px-4 py-2 mb-4 rounded-md"
-        /> */}
-
+  
         <input
           type="time"
           value={appointmentTime}
           onChange={(e) => setAppointmentTime(e.target.value)}
           className="w-full border px-4 py-2 mb-4 rounded-md"
         />
-
+  
         <select
           value={category}
           onChange={(e) => setCategory(e.target.value)}
@@ -182,43 +178,48 @@ const Appointments = () => {
           <option value="Kontrolle">Kontrolle</option>
           <option value="Sonstiges">Sonstiges</option>
         </select>
-
+  
         <textarea
           placeholder="Beschreibung"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          className="w-full border px-4 py-2 mb-4 rounded-md"
+          className="w-full border px-4 py-2 mb-2 rounded-md"
         />
       </div>
-
+  
       <button
         onClick={handleSaveAppointment}
-        className="bg-blue-500 text-white px-6 py-2 rounded-md mt-4"
+        className="w-full bg-gray-700 text-white hover:text-gray-700 text-lg font-semibold rounded-md hover:bg-gradient-to-r hover:from-yellow-300 hover:to-yellow-600 mt-4 transition-all cursor-pointer p-2"
       >
         Save Appointment
       </button>
-
-      <h3 className="mt-6 font-bold mb-2">The list of your appointments:</h3>
+      </div>
+      <div>
+      <h3 className="mt-6 text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-yellow-600 font-extrabold text-5xl mb-2 p-2">My Appointments</h3>
       <ul>
-        {appointments.map((appt) => (
-          <li key={appt.id} className="mb-4">
-            <strong>{appt.title}</strong>
-            <br />
-            {appt.appointment_date.toLocaleString()}
-            <br />
-            Kategorie: {appt.category}
-            <br />
-            Beschreibung: {appt.description}
-            <button
-              onClick={() => handleDeleteAppointment(appt.id)}
-              className="bg-red-500 text-white ml-2 px-3 py-1 rounded-md"
-            >
-              Löschen
-            </button>
-          </li>
-        ))}
-      </ul>
-    </div>
+  {appointments.map((appt) => (
+    <li key={appt.id} className="mb-4 p-4 bg-gray-100 shadow rounded-md flex justify-between items-center">
+      <div>
+        <strong>{appt.title}</strong>
+        <br />
+        Date and Time: {appt.appointment_date.toLocaleString()}
+        <br />
+        Category: {appt.category}
+        <br />
+        Description: {appt.description}
+      </div>
+      <button
+        onClick={() => handleDeleteAppointment(appt.id)}
+        className="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-gradient-to-r hover:from-yellow-300 hover:to-yellow-600 hover:font-bold hover:text-red-500 transition ml-4"
+      >
+        Delete
+      </button>
+    </li>
+  ))}
+</ul>
+      </div>
+  </div>
+  
   );
 };
 

@@ -113,29 +113,29 @@ const ProfilePage = () => {
 
   // Handle profile deletion
   // Handle profile deletion
-const handleDeleteProfile = async () => {
-  try {
-    const response = await fetch("http://localhost:5000/profile/delete", { // Correct endpoint
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+  const handleDeleteProfile = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/profile/delete", {
+        // Correct endpoint
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
 
-    if (!response.ok) {
-      throw new Error("Failed to delete profile");
+      if (!response.ok) {
+        throw new Error("Failed to delete profile");
+      }
+
+      localStorage.removeItem("token");
+      alert("Profile deleted successfully");
+      navigate("/login"); // ✅ Correct redirection
+    } catch (error) {
+      console.error("Error deleting profile:", error);
+      setError("Failed to delete profile.");
     }
-
-    localStorage.removeItem("token");
-    alert("Profile deleted successfully");
-    navigate("/login"); // ✅ Correct redirection
-  } catch (error) {
-    console.error("Error deleting profile:", error);
-    setError("Failed to delete profile.");
-  }
-};
-
+  };
 
   // Format date for displaying as text
   const formatDate = (isoDateString) => {
@@ -154,11 +154,10 @@ const handleDeleteProfile = async () => {
 
       {error && <div className="text-red-500 text-center mb-4">{error}</div>}
 
+      <h2 className="p-2 mb-6 text-center text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-yellow-600 font-extrabold text-5xl">
+        Profile
+      </h2>
       <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-        <h2 className="text-2xl font-semibold text-center mb-4">
-          Profile Information
-        </h2>
-
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Displaying first_name and last_name as text */}
           <div className="text-lg">
@@ -252,7 +251,7 @@ const handleDeleteProfile = async () => {
 
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 mt-4"
+            className="w-full bg-gray-700 text-white hover:text-gray-700 text-lg font-semibold rounded-md hover:bg-gradient-to-r hover:from-yellow-300 hover:to-yellow-600 mt-4 transition-all cursor-pointer p-2"
           >
             Save Profile
           </button>
@@ -261,7 +260,7 @@ const handleDeleteProfile = async () => {
           <button
             type="button"
             onClick={handleDeleteProfile}
-            className="w-full bg-red-500 text-white p-2 rounded hover:bg-red-600 mt-4"
+            className="w-full bg-orange-700 text-white text-lg font-semibold rounded-md hover:bg-gradient-to-r hover:from-yellow-300 hover:to-yellow-600 hover:font-bold hover:text-red-500 mt-4 transition-all cursor-pointer p-2"
           >
             Delete Profile
           </button>

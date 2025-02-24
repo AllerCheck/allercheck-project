@@ -147,68 +147,115 @@ const Statistics = () => {
     };
 
     return (
-        <div className="flex flex-col items-center py-10">
-            {/* <NavigationButtons /> */}
-            <h2 className="text-2xl font-semibold text-center mb-4">Records</h2>
-            <div className="flex space-x-2">
-                <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} className="border p-2 rounded" />
-                <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} className="border p-2 rounded" />
-                <button onClick={handleFetchStatistics} className="bg-blue-500 text-white px-4 py-2 rounded">Enter</button>
-            </div>
+        <div className="flex flex-col items-center py-10 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-700">
+  <h2 className="p-2 mb-6 text-center text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-yellow-600 font-extrabold text-5xl">
+    Allery Data Report
+  </h2>
+  <div className="max-w-5xl min-w-96 mx-auto p-6 bg-white shadow-lg rounded-lg">
+    <div className="flex space-x-2 flex-wrap justify-center">
+      <input
+        type="date"
+        value={startDate}
+        onChange={(e) => setStartDate(e.target.value)}
+        className="border p-2 rounded"
+      />
+      <input
+        type="date"
+        value={endDate}
+        onChange={(e) => setEndDate(e.target.value)}
+        className="border p-2 rounded"
+      />
+      <button
+        onClick={handleFetchStatistics}
+        className="bg-gray-600 hover:bg-gradient-to-r from-yellow-300 to-yellow-600 text-white hover:text-gray-700 text-lg font-semibold px-4 py-2 rounded cursor-pointer w-24"
+      >
+        Search
+      </button>
+    </div>
 
-            {noEntriesMessage && <div className="mt-4 text-red-600 text-center">{noEntriesMessage}</div>}
+    {noEntriesMessage && (
+      <div className="mt-4 text-red-600 text-center">{noEntriesMessage}</div>
+    )}
 
-            {entries.length > 0 && (
-                <div className="mt-4 p-6 border rounded shadow-lg w-full max-w-4xl">
-                    <table className="min-w-full table-auto">
-                        <thead>
-                            <tr>
-                                <th className="px-2 py-4 text-center">Date</th>
-                                <th className="px-4 py-4 text-center">Nose</th>
-                                <th className="px-4 py-4 text-center">Lungs</th>
-                                <th className="px-4 py-4 text-center">Skin</th>
-                                <th className="px-4 py-4 text-center">Eyes</th>
-                                <th className="px-4 py-4 text-center">Medications</th>
-                                <th className="px-4 py-4 text-center">Notes</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {entries.map(entry => {
-                                const entryDate = new Date(entry.entry_date);
-                                const formattedDate = `${entryDate.getDate().toString().padStart(2, "0")}-${(entryDate.getMonth() + 1).toString().padStart(2, "0")}-${entryDate.getFullYear()}`;
-                                return (
-                                    <tr key={entry.id}>
-                                        <td className="px-4 py-2 text-center">{formattedDate}</td>
-                                        <td className="px-4 py-2 text-center">{entry.nose}</td>
-                                        <td className="px-4 py-2 text-center">{entry.lungs}</td>
-                                        <td className="px-4 py-2 text-center">{entry.skin}</td>
-                                        <td className="px-4 py-2 text-center">{entry.eyes}</td>
-                                        <td className="px-4 py-2 text-center">{entry.medication_taken === 1 ? "yes" : "no"}</td>
-                                        <td className="px-4 py-2 text-center break-words">{entry.notes || " "}</td>
-                                    </tr>
-                                );
-                            })}
-                        </tbody>
-                    </table>
-                    <div className="mt-4 p-4 border rounded shadow-lg text-center">
-                        <h3 className="text-lg font-semibold">Summary</h3>
-                        <p><strong>Total Entries:</strong> {statistics.total_entries}</p>
-                        <p><strong>Average of Symptoms:</strong></p>
-                        <ul>
-                            <li>Nose: {statistics.avg_nose}</li>
-                            <li>Lungs: {statistics.avg_lungs}</li>
-                            <li>Skin: {statistics.avg_skin}</li>
-                            <li>Eyes: {statistics.avg_eyes}</li>
-                        </ul>
-                        <p><strong>Medications taken:</strong> {statistics.total_medications}</p>
-                        <div className="flex space-x-2 mt-4 justify-center">
-                            <button onClick={() => handleExport("csv")} className="bg-green-500  hover:bg-green-700 text-white px-4 py-2 rounded cursor-pointer">Export CSV</button>
-                            <button onClick={() => handleExport("pdf")} className="bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded cursor-pointer">Export PDF</button>
-                        </div>
-                    </div>
-                </div>
-            )}
+    {entries.length > 0 && (
+      <div className="mt-4 p-6 border rounded shadow-lg w-full max-w-4xl">
+        <table className="min-w-full table-auto">
+          <thead>
+            <tr>
+              <th className="px-2 py-4 text-center">Date</th>
+              <th className="px-4 py-4 text-center">Nose</th>
+              <th className="px-4 py-4 text-center">Lungs</th>
+              <th className="px-4 py-4 text-center">Skin</th>
+              <th className="px-4 py-4 text-center">Eyes</th>
+              <th className="px-4 py-4 text-center">Medications</th>
+              <th className="px-4 py-4 text-center">Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            {entries.map((entry) => {
+              const entryDate = new Date(entry.entry_date);
+              const formattedDate = `${entryDate
+                .getDate()
+                .toString()
+                .padStart(2, "0")}-${(entryDate.getMonth() + 1)
+                .toString()
+                .padStart(2, "0")}-${entryDate.getFullYear()}`;
+              return (
+                <tr key={entry.id}>
+                  <td className="px-4 py-2 text-center">{formattedDate}</td>
+                  <td className="px-4 py-2 text-center">{entry.nose}</td>
+                  <td className="px-4 py-2 text-center">{entry.lungs}</td>
+                  <td className="px-4 py-2 text-center">{entry.skin}</td>
+                  <td className="px-4 py-2 text-center">{entry.eyes}</td>
+                  <td className="px-4 py-2 text-center">
+                    {entry.medication_taken === 1 ? "yes" : "no"}
+                  </td>
+                  <td className="px-4 py-2 text-center break-words">
+                    {entry.notes || " "}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+
+        <div className="mt-4 p-4 border rounded shadow-lg text-center">
+          <h3 className="text-lg font-semibold">Summary</h3>
+          <p>
+            <strong>Total Entries:</strong> {statistics.total_entries}
+          </p>
+          <p>
+            <strong>Average of Symptoms:</strong>
+          </p>
+          <ul>
+            <li>Nose: {statistics.avg_nose}</li>
+            <li>Lungs: {statistics.avg_lungs}</li>
+            <li>Skin: {statistics.avg_skin}</li>
+            <li>Eyes: {statistics.avg_eyes}</li>
+          </ul>
+          <p>
+            <strong>Medications taken:</strong> {statistics.total_medications}
+          </p>
+          <div className="flex space-x-2 mt-4 justify-center">
+            <button
+              onClick={() => handleExport("csv")}
+              className="bg-gray-600 hover:bg-gradient-to-r from-yellow-300 to-yellow-600 text-white text-lg font-semibold px-4 py-2 rounded cursor-pointer w-24"
+            >
+              CSV
+            </button>
+            <button
+              onClick={() => handleExport("pdf")}
+              className="bg-gray-600 hover:bg-gradient-to-r from-yellow-300 to-yellow-600 text-white text-lg font-semibold px-4 py-2 rounded cursor-pointer w-24"
+            >
+              PDF
+            </button>
+          </div>
         </div>
+      </div>
+    )}
+  </div>
+</div>
+
     );
 };
 

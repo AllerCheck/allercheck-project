@@ -11,11 +11,11 @@ const HeaderWithNav = () => {
       navigate("/login");
     }
   };
-  
+
   /* Function to redirect to profile by clicking on First Name */
   // const handleLoginClick = () => {
   //   navigate(token ? "/profile" : "/login");
-  // }; 
+  // };
 
   const handleLogout = () => {
     logout();
@@ -23,12 +23,15 @@ const HeaderWithNav = () => {
   };
 
   return (
-    <div className="flex justify-between h-16">
+    <div className="flex justify-between h-16 mt-2">
       {/* Main Header */}
-      <header className="bg-neutral-100 p-4 px-12 flex items-center justify-between w-full">
+      <header className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-700 p-4 px-12 flex items-center justify-between w-full">
         {/* Logo */}
-        <Link to="/" className="font-bold text-xl flex items-center gap-2">
-          <img src="/logo.svg" alt="AllerCheck Logo" className="w-10" />
+        <Link
+          to="/"
+          className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-yellow-600 font-extrabold text-3xl flex items-center gap-2"
+        >
+          <img src="/logo.svg" alt="AllerCheck Logo" className="w-12" />
           AllerCheck
         </Link>
 
@@ -40,18 +43,16 @@ const HeaderWithNav = () => {
         )}
         {/* User Info / Login */}
         <div className="flex items-center gap-4">
-          <span
-            onClick={handleLoginClick}
-            className="flex items-center gap-2"
-          >
-            {token ? (<span className="px-4 py-2 text-blue font-semibold text-xl ">
-              {"Hi" + " " + first_name || "User"}
-            </span>
+          <span onClick={handleLoginClick} className="flex items-center gap-2">
+            {token ? (
+              <span className="px-4 py-2 text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-yellow-600 font-extrabold text-2xl ">
+                {"Hi" + " " + first_name || "User"}
+              </span>
             ) : (
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
+                width="32"
+                height="32"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
