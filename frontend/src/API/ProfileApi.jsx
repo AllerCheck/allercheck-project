@@ -21,6 +21,12 @@ export const getMedications = async () => {
   return response.json();
 };
 
+// Fetch allergies and medications data
+export const medicsandallergies = async () => {
+  const response = await fetch(`${API_URL}/auth/profile/allergies-medications`);
+  return response.json();
+}
+
 // Update profile data
 export const updateProfile = async (token, profileData) => {
   const response = await fetch(`${API_URL}/profile/update`, {
