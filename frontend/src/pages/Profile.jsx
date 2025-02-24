@@ -112,28 +112,30 @@ const ProfilePage = () => {
   };
 
   // Handle profile deletion
-  const handleDeleteProfile = async () => {
-    try {
-      const response = await fetch("http://localhost:5000/api/profile/delete", {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
+  // Handle profile deletion
+const handleDeleteProfile = async () => {
+  try {
+    const response = await fetch("http://localhost:5000/profile/delete", { // Correct endpoint
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
 
-      if (!response.ok) {
-        throw new Error("Failed to delete profile");
-      }
-
-      localStorage.removeItem("token");
-      alert("Profile deleted successfully");
-      navigate("/login"); // ✅ Correct redirection
-    } catch (error) {
-      console.error("Error deleting profile:", error);
-      setError("Failed to delete profile.");
+    if (!response.ok) {
+      throw new Error("Failed to delete profile");
     }
-  };
+
+    localStorage.removeItem("token");
+    alert("Profile deleted successfully");
+    navigate("/login"); // ✅ Correct redirection
+  } catch (error) {
+    console.error("Error deleting profile:", error);
+    setError("Failed to delete profile.");
+  }
+};
+
 
   // Format date for displaying as text
   const formatDate = (isoDateString) => {
