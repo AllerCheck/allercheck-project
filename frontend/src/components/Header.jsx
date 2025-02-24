@@ -19,7 +19,7 @@ const Header = () => {
 
   return (
     <div className="flex justify-between h-16 w-full">
-      <header className="bg-teal-200 p-4 px-12 flex justify-between items-center w-full">
+      <header className="bg-neutral-100 p-4 px-12 flex justify-between items-center w-full">
         <Link to="/" className="font-bold text-xl flex items-center gap-2">
           <img src="/logo.svg" alt="AllerCheck Logo" className="w-10" />
           AllerCheck
