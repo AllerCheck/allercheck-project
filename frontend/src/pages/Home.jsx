@@ -129,7 +129,7 @@ function Home() {
               {currentPollenData.map((day, index) => (
                 <div
                   key={index}
-                  className="mt-6 p-6 rounded-2xl hover:bg-white/10 transition-all duration-200"
+                  className="mt-6 p-6 rounded-2xl transition-all duration-200"
                 >
                   <p className="text-lg text-gray-300">
                     <strong>Date:</strong> {day.date?.day}/{day.date?.month}/
