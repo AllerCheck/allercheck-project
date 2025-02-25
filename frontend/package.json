@@ -12,6 +12,7 @@
   "dependencies": {
     "@tailwindcss/vite": "^4.0.3",
     "axios": "^1.7.9",
+    "favicon": "^0.0.2",
     "jspdf": "^2.5.2",
     "jspdf-autotable": "^3.8.4",
     "papaparse": "^5.5.2",
