@@ -18,7 +18,6 @@ const Appointments = () => {
         const response = await fetch("http://localhost:5000/appointments", {
           headers: { Authorization: `Bearer ${token}` },
         });
-
         if (response.ok) {
           const data = await response.json();
 
@@ -41,13 +40,6 @@ const Appointments = () => {
   const formatDateForBackend = (date) => {
     // Convert the date to a string that can be saved
     return new Date(date).toISOString().slice(0, 19).replace("T", " ");
-  };
-
-  // Ensure the selected date is set correctly for the input (only date part, no time)
-  const formatDateForInput = (date) => {
-    const normalizedDate = new Date(date);
-    normalizedDate.setHours(0, 0, 0, 0); // Normalize to midnight of the selected day
-    return normalizedDate.toISOString().slice(0, 16); // Format as YYYY-MM-DDTHH:MM
   };
 
   // Combine the date from the calendar and the selected time from the input field
@@ -118,13 +110,14 @@ const Appointments = () => {
 
   // Display fetched appointments on the calendar
   const tileContent = ({ date }) => {
-    const dateStr = date.toISOString().split("T")[0];
-
+    // Convert the calendar date to a local date string (YYYY-MM-DD)
+    const dateStr = date.toLocaleDateString('de-DE'); //
+  
     const currentAppointments = appointments.filter((appt) => {
-      const apptDateStr = appt.appointment_date.toISOString().split("T")[0];
+      const apptDateStr = new Date(appt.appointment_date).toLocaleDateString('de-DE');
       return apptDateStr === dateStr;
     });
-
+  
     return currentAppointments.length > 0 ? (
       <div className="bg-blue-200 text-xs text-gray-700 rounded p-1">
         {currentAppointments.map((appt, index) => (
@@ -145,7 +138,9 @@ const Appointments = () => {
         <Calendar
           onChange={setSelectedDate}
           value={selectedDate}
-          tileContent={tileContent} // Display fetched appointments
+          tileContent={tileContent}
+          calendarType="iso8601"// Display fetched appointments
+          locale="de-DE"
         />
       </div>
   
