@@ -6,12 +6,11 @@ export const fetchStatistics = async (token, startDate, endDate) => {
             method: "GET",
             headers: { "Authorization": `Bearer ${token}` }
         });
-
         if (!response.ok) {
             const errorData = await response.json(); 
             throw new Error(errorData.message || "Fehler beim Abrufen der Statistik");
         }
-
+        
         return await response.json(); 
     } catch (error) {
         console.error("Fehler beim Abrufen der Statistik:", error);

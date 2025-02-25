@@ -1,6 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom"; // Import useNavigate for redirection
-import NavigationButtons from "../components/NavigationButtons";
 import axios from "axios";
 
 const DailyJournal = () => {
@@ -13,7 +12,6 @@ const DailyJournal = () => {
     notes: "",
   });
 
-  const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
   // Update state for journal entries
@@ -31,6 +29,7 @@ const DailyJournal = () => {
       return;
     }
 
+    console.log(journal.medications);
     axios
       .post(
         "http://localhost:5000/journal",

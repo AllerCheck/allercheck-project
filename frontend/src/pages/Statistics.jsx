@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { fetchStatistics } from "../api/StatisticsApi";
-import NavigationButtons from "../components/NavigationButtons";
 import Papa from "papaparse"; // For CSV export
 import { jsPDF } from "jspdf"; // For PDF export
 import "jspdf-autotable"; // Import autoTable plugin
@@ -31,6 +30,7 @@ const Statistics = () => {
 
     const data = await fetchStatistics(token, startDate, endDate);
     if (data) {
+      console.log("Statistics Data:", data);
       const filteredEntries = data
         .filter((entry) => {
           const entryDate = new Date(entry.entry_date);
