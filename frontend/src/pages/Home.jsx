@@ -131,16 +131,16 @@ function Home() {
                   key={index}
                   className="mt-6 p-6 rounded-2xl transition-all duration-200"
                 >
-                  <p className="text-lg text-gray-300">
+                  <p className="text-2xl text-gray-300">
                     <strong>Date:</strong> {day.date?.day}/{day.date?.month}/
                     {day.date?.year}
                   </p>
 
                   {/* Pollen Types */}
-                  <h4 className="font-semibold mt-4 text-yellow-300 text-xl">
+                  <h4 className="font-semibold mt-4 text-yellow-300 text-2xl">
                     Pollen Types:
                   </h4>
-                  <ul className="list-disc ml-6 text-gray-300">
+                  <ul className="list-disc ml-6 text-gray-300 text-2xl">
                     {day.pollenTypeInfo.map((pollen, i) => (
                       <li key={i} className="mt-2">
                         <strong>{pollen.displayName}</strong>{" "}
@@ -148,20 +148,20 @@ function Home() {
                         {pollen.indexInfo && (
                           <>
                             <p>
-                              <strong>Index:</strong> {pollen.indexInfo.value} (
+                              <strong></strong> {pollen.indexInfo.value} (
                               {pollen.indexInfo.category})
                             </p>
-                            <p className="text-red-300 text-sm italic">
+                            <p className="text-red-300 text-xl italic">
                               {pollen.indexInfo.indexDescription}
                             </p>
-                            <div
+                            {/* <div
                               className="w-10 h-10 rounded-full mt-2"
                               style={{
                                 backgroundColor: `rgb(${
                                   pollen.indexInfo.color.green * 255
                                 }, 0, ${pollen.indexInfo.color.blue * 255})`,
                               }}
-                            ></div>
+                            ></div> */}
                           </>
                         )}
                       </li>
@@ -169,10 +169,10 @@ function Home() {
                   </ul>
 
                   {/* Plants Information */}
-                  <h4 className="font-semibold mt-4 text-yellow-300 text-xl">
-                    Plants:
+                  <h4 className="font-semibold mt-4 text-yellow-300 text-2xl">
+                    Plants Type:
                   </h4>
-                  <ul className="list-disc ml-6 text-gray-300">
+                  <ul className="list-disc ml-6 text-gray-300 text-2xl">
                     {day.plantInfo.map((plant, i) => (
                       <li key={i} className="mt-2">
                         <strong>{plant.displayName}</strong>{" "}
@@ -180,20 +180,20 @@ function Home() {
                         {plant.indexInfo && (
                           <>
                             <p>
-                              <strong>Index:</strong> {plant.indexInfo.value} (
+                              <strong></strong> {plant.indexInfo.value} (
                               {plant.indexInfo.category})
                             </p>
-                            <p className="text-red-300 text-sm italic">
+                            <p className="text-red-300 text-xl italic">
                               {plant.indexInfo.indexDescription}
                             </p>
-                            <div
+                            {/* <div
                               className="w-10 h-10 rounded-full mt-2"
                               style={{
                                 backgroundColor: `rgb(${
                                   plant.indexInfo.color.green * 255
                                 }, 0, ${plant.indexInfo.color.blue * 255})`,
                               }}
-                            ></div>
+                            ></div> */}
                           </>
                         )}
                       </li>
