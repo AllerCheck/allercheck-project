@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { getMedications, getAllergies } from "./src/api/PollenApi";
+import { getMedications, getAllergies } from "/src/api/PollenApi";
 
 function RegisterForm() {
   const [formData, setFormData] = useState({

@@ -7,7 +7,7 @@ import {
   updatePassword,
   getAllergies,
   getMedications,
-} from "../api/ProfileApi";
+} from "src/api/ProfileApi";
 // import NavigationButtons from "../components/NavigationButtons";
 
 const ProfilePage = () => {

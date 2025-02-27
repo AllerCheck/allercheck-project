@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { fetchPollenData } from "../api/PollenApi";
-import { fetchArticles } from "../api/ArticlesApi";
+import { fetchPollenData } from "src/api/PollenApi";
+import { fetchArticles } from "src/api/ArticlesApi";
 import HomeButtons from "../components/HomeButtons";
 
 function Home() {
