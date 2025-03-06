@@ -1,1 +1,2 @@
-npm run test:singlerun
+
+cd frontend && npx vitest --run

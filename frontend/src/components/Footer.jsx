@@ -72,7 +72,7 @@ export default function Footer() {
 
 function Modal({ title, children, onClose }) {
   return (
-    <div className="fixed inset-0 bg-white/30 flex justify-center items-center">
+    <div data-testid={`modal-${title.toLowerCase()}`} className="fixed inset-0 bg-white/30 flex justify-center items-center">
       <div className="bg-white bg-opacity-95 p-6 rounded shadow-lg w-96">
         <h2 className="text-xl font-bold mb-2 text-yellow-600">{title}</h2>
         <div>{children}</div>

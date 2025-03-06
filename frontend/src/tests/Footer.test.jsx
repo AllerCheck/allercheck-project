@@ -31,7 +31,7 @@ test("Öffnet und schließt das Impress-Modal", async () => {
   render(<Footer />);
 
   fireEvent.click(screen.getByTestId("impress"));
-  expect(screen.getByText("AllerCheck GmbH")).toBeInTheDocument();
+  expect(screen.getByTestId("modal-impress")).toBeInTheDocument();
 
   fireEvent.click(screen.getByText("Close"));
   expect(screen.queryByText("AllerCheck GmbH")).not.toBeInTheDocument();
