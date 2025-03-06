@@ -7,9 +7,11 @@
     "dev": "vite",
     "build": "vite build",
     "test": "vitest",
+    "test:singlerun": "vitest run",
+    "test:coverage": "vitest --coverage",
     "lint": "eslint .",
     "preview": "vite preview",
-    "prepare": "husky"
+    "prepare": "husky install"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.0.3",
@@ -32,15 +34,19 @@
     "@types/jsdom": "^21.1.7",
     "@types/react": "^19.0.8",
     "@types/react-dom": "^19.0.3",
-    "@vitejs/plugin-react-swc": "^3.5.0",
+    "@vitejs/plugin-react": "^4.3.4",
     "eslint": "^9.19.0",
     "eslint-plugin-react": "^7.37.4",
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-react-refresh": "^0.4.18",
     "globals": "^15.14.0",
     "husky": "^8.0.3",
+    "jsdom": "^26.0.0",
     "lint-staged": "^15.4.3",
     "vite": "^6.1.0",
     "vitest": "^3.0.7"
+  },
+  "lint-staged": {
+    "*.jsx": "vitest related"
   }
 }

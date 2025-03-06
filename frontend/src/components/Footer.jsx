@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useState } from "react";
 
 export default function Footer() {
@@ -14,7 +15,7 @@ export default function Footer() {
             </button>
           </li>
           <li>
-            <button onClick={() => setModal("impress")} className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-yellow-600 hover:underline cursor-pointer">
+            <button data-testid="impress" onClick={() => setModal("impress")} className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-yellow-600 hover:underline cursor-pointer">
               Impress
             </button>
           </li>
