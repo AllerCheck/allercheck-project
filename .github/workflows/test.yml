@@ -1,0 +1,41 @@
+name: Run Tests
+
+on:
+  push:
+    branches:
+        - '*' # to run on all branches
+  pull_request:
+    branches:
+      - '*' # to run on all branches
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Set up Node.js environment
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'  # Or the Node version you are using
+
+          
+      # Install dependencies
+      - name: Install dependencies
+        run: npm ci
+
+      # Run tests using Vitest
+      - name: Run Vitest test with coverage
+        run: npm run test -- --coverage# Assuming your test command is `npm run test`
+
+      # Optionally, upload test results
+      - name: Upload test results
+        if: failure()  # Uploads if the test fails
+        uses: actions/upload-artifact@v2
+        with:
+          name: vitest-results
+          path: ./test-results  # Adjust the path if necessary
