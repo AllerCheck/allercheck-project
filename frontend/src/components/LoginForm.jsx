@@ -50,6 +50,7 @@ function LoginForm() {
     <div className="flex flex-col justify-center items-center p-4">
       <form
         onSubmit={handleSubmit}
+        data-testid="login-form"
         className="bg-white p-6 rounded-lg shadow-md w-80"
       >
         <h2 className="text-2xl font-semibold text-center mb-4">Login</h2>
@@ -62,6 +63,7 @@ function LoginForm() {
         <input
           type="email"
           id="email"
+          data-testid="email-input"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 mb-3"
@@ -75,12 +77,14 @@ function LoginForm() {
         <input
           type="password"
           id="password"
+          data-testid="password-input"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 mb-4"
         />
         <button
           type="submit"
+          data-testid="login-button"
           className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition duration-200"
         >
           Login
