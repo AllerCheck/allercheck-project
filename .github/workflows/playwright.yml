@@ -19,7 +19,9 @@ jobs:
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
     - name: Start Application
-      run: npm run dev
+      run: npm run dev &   # Start in the background
+    - name: Wait for the app to be ready
+      run: npx wait-on http://localhost:5173
     - name: Run Playwright tests
       run: npx playwright test
     - uses: actions/upload-artifact@v4
@@ -28,5 +30,3 @@ jobs:
         name: playwright-report
         path: playwright-report/
         retention-days: 30
-    - name: Wait for the app to be ready
-      run: npx wait-on http://localhost:5173
