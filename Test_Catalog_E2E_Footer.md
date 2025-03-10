@@ -18,7 +18,7 @@
 | ID  | Test Case                                  | Expected Result |
 | --- | ----------------------------------------- | --------------- |
 | FT-07 | Footer has correct background color | The footer should have a gradient background (`from-gray-900 via-gray-800 to-gray-70`) |
-| FT-08 | Footer links have hover effect | Footer links should change appearance when hovered |
+| FT-08 | Footer links have hover effects | Footer links should change appearance when hovered |
 
 ## **4. Accessibility & Responsiveness**
 | ID  | Test Case                                  | Expected Result |
