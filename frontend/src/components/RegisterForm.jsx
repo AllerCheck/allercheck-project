@@ -141,33 +141,33 @@ function RegisterForm() {
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label className="block text-sm font-medium text-gray-700">First Name *</label>
-            <input type="text" name="first_name" value={formData.first_name} onChange={handleChange} className="w-full p-2 border border-gray-300 rounded-md" required />
+            <input type="text" name="first_name" data-testid="first_name" value={formData.first_name} onChange={handleChange} className="w-full p-2 border border-gray-300 rounded-md" required />
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700">Last Name *</label>
-            <input type="text" name="last_name" value={formData.last_name} onChange={handleChange} className="w-full p-2 border border-gray-300 rounded-md" required />
+            <input type="text" name="last_name" data-testid="last_name" value={formData.last_name} onChange={handleChange} className="w-full p-2 border border-gray-300 rounded-md" required />
           </div>
         </div>
 
         {/* Email */}
         <label className="block text-sm font-medium text-gray-700 mt-3">Email *</label>
-        <input type="email" name="email" value={formData.email} onChange={handleChange} className="w-full p-2 border border-gray-300 rounded-md" required />
+        <input type="email" name="email" data-testid="email" value={formData.email} onChange={handleChange} className="w-full p-2 border border-gray-300 rounded-md" required />
 
         {/* Confirm Email */}
         <label className="block text-sm font-medium text-gray-700 mt-3">Confirm Email *</label>
-        <input type="email" name="emailConfirm" value={formData.emailConfirm} onChange={handleChange} className="w-full p-2 border border-gray-300 rounded-md" required />
+        <input type="email" name="emailConfirm" data-testid="emailConfirm" value={formData.emailConfirm} onChange={handleChange} className="w-full p-2 border border-gray-300 rounded-md" required />
 
         {/* Password */}
         <label className="block text-sm font-medium text-gray-700 mt-3">Password *</label>
-        <input type="password" name="password" value={formData.password} onChange={handleChange} className="w-full p-2 border border-gray-300 rounded-md" required />
+        <input type="password" name="password" data-testid="password" value={formData.password} onChange={handleChange} className="w-full p-2 border border-gray-300 rounded-md" required />
 
         {/* Confirm Password */}
         <label className="block text-sm font-medium text-gray-700 mt-3">Confirm Password *</label>
-        <input type="password" name="passwordConfirm" value={formData.passwordConfirm} onChange={handleChange} className="w-full p-2 border border-gray-300 rounded-md" required />
+        <input type="password" name="passwordConfirm" data-testid="passwordConfirm" value={formData.passwordConfirm} onChange={handleChange} className="w-full p-2 border border-gray-300 rounded-md" required />
 
         {/* Date of Birth */}
         <label className="block text-sm font-medium text-gray-700 mt-3">Date of Birth *</label>
-        <input type="date" name="dob" value={formData.dob} onChange={handleChange} className="w-full p-2 border border-gray-300 rounded-md" required />
+        <input type="date" name="dob" data-testid="dob" value={formData.dob} onChange={handleChange} className="w-full p-2 border border-gray-300 rounded-md" required />
 
  {/* Allergien Auswahl */}
  <label className="block text-sm font-medium text-gray-700">Allergies</label>
@@ -213,12 +213,12 @@ function RegisterForm() {
         {/* Accept Terms */}
         <div className="mt-3">
           <label className="inline-flex items-center">
-            <input type="checkbox" name="acceptPolicy" checked={formData.acceptPolicy} onChange={handleChange} className="form-checkbox" required />
+            <input type="checkbox" name="acceptPolicy" data-testid="acceptPolicy" checked={formData.acceptPolicy} onChange={handleChange} className="form-checkbox" required />
             <span className="ml-2 text-sm">I accept the Terms and Conditions</span>
           </label>
         </div>
 
-        <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition duration-200 mt-4">
+        <button type="submit" data-testid="submitButton" className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition duration-200 mt-4">
           Register now
         </button>
       </form>

@@ -62,6 +62,7 @@ function LoginForm() {
         <input
           type="email"
           id="email"
+          data-testid="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 mb-3"
@@ -75,12 +76,14 @@ function LoginForm() {
         <input
           type="password"
           id="password"
+          data-testid="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 mb-4"
         />
         <button
           type="submit"
+          data-testid="submit-button"
           className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition duration-200"
         >
           Login
