@@ -22,11 +22,7 @@ const HeaderWithNav = () => {
       {/* Main Header */}
       <header className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-700 p-4 px-12 flex items-center justify-between w-full">
         {/* Logo */}
-        <Link
-          to="/"
-          className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-yellow-600 font-extrabold text-3xl flex items-center gap-2"><img src="/logo.svg" alt="AllerCheck Logo" className="w-12" />
-          AllerCheck
-        </Link>
+        <Link to="/" className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-yellow-600 font-extrabold text-3xl flex items-center gap-2"><img src="/logo.svg" alt="AllerCheck Logo" className="w-12" />AllerCheck</Link>
 
         {/* Navigation Buttons Below Header */}
         {token && (
