@@ -1,7 +1,6 @@
 import express from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import mariadb from 'mariadb';
 import dotenv from 'dotenv';
 import pool from '../config/db.js';
 
