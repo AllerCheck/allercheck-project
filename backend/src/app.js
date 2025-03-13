@@ -14,8 +14,6 @@ import scannerRoutes from "./routes/scanner.js"; // 📌 NEUE SCANNER-ROUTE
 
 dotenv.config();
 
-// let express = require('express');
-
 let example = express();
 example.disable("x-powered-by");
 
