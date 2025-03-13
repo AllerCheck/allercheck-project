@@ -8,7 +8,7 @@ import {
   getAllergies,
   getMedications,
 } from "../api/ProfileApi";
-// import NavigationButtons from "../components/NavigationButtons";
+
 
 const ProfilePage = () => {
   const token = localStorage.getItem("token");
