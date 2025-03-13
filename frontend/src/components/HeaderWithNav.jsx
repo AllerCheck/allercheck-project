@@ -24,8 +24,7 @@ const HeaderWithNav = () => {
         {/* Logo */}
         <Link
           to="/"
-          className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-yellow-600 font-extrabold text-3xl flex items-center gap-2"
-        ><img src="/logo.svg" alt="AllerCheck Logo" className="w-12" />
+          className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-yellow-600 font-extrabold text-3xl flex items-center gap-2"><img src="/logo.svg" alt="AllerCheck Logo" className="w-12" />
           AllerCheck
         </Link>
 
