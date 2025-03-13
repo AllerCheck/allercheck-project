@@ -17,7 +17,7 @@ dotenv.config();
 const app = express();
 app.use(express.json());  // 📌 JSON-Parsing muss aktiviert sein
 app.use(express.urlencoded({ extended: true })); 
-app.use(cors());
+app.use(cors(corsOptions));
 
 // API-Routen für verschiedene Funktionen
 app.use("/appointments", appointmentRoutes);
